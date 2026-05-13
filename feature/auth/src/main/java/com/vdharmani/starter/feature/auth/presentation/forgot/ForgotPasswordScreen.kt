@@ -24,12 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vdharmani.starter.core.ui.components.AppLoader
 import com.vdharmani.starter.core.ui.components.EmailField
+import com.vdharmani.starter.feature.auth.R
 
 @Composable
 fun ForgotPasswordScreen(
@@ -90,12 +92,12 @@ private fun ForgotPasswordForm(
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Forgot your password?",
+            text = stringResource(R.string.auth_forgot_title),
             style = MaterialTheme.typography.headlineMedium,
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Enter your email and we'll send you a reset link.",
+            text = stringResource(R.string.auth_forgot_subtitle),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
         )
@@ -114,12 +116,12 @@ private fun ForgotPasswordForm(
             modifier = Modifier.fillMaxWidth(),
             enabled = !state.isLoading && state.email.isNotBlank(),
         ) {
-            Text("Send reset link")
+            Text(stringResource(R.string.auth_forgot_submit))
         }
         Spacer(Modifier.height(8.dp))
 
         TextButton(onClick = { onIntent(ForgotPasswordIntent.BackToLogin) }) {
-            Text("Back to login")
+            Text(stringResource(R.string.auth_back_to_login))
         }
     }
 }
@@ -134,18 +136,18 @@ private fun SentConfirmation(email: String, onBack: () -> Unit) {
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Check your inbox",
+            text = stringResource(R.string.auth_forgot_sent_title),
             style = MaterialTheme.typography.headlineMedium,
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "If an account exists for $email, we've sent a reset link.",
+            text = stringResource(R.string.auth_forgot_sent_body, email),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.height(32.dp))
         OutlinedButton(onClick = onBack, modifier = Modifier.fillMaxWidth()) {
-            Text("Back to login")
+            Text(stringResource(R.string.auth_back_to_login))
         }
     }
 }

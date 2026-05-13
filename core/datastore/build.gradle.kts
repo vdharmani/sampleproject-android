@@ -28,6 +28,7 @@ kotlin {
 dependencies {
     implementation(project(":core:common"))
     implementation(libs.datastore.preferences)
+    implementation(libs.androidx.security.crypto)
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)

@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vdharmani.starter.core.ui.components.AppLoader
 import com.vdharmani.starter.core.ui.components.EmailField
 import com.vdharmani.starter.core.ui.components.PasswordField
+import com.vdharmani.starter.feature.auth.R
 
 @Composable
 fun SignupScreen(
@@ -77,14 +79,14 @@ private fun SignupContent(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
-                Text("Create your account", style = MaterialTheme.typography.headlineMedium)
+                Text(stringResource(R.string.auth_signup_title), style = MaterialTheme.typography.headlineMedium)
                 Spacer(Modifier.height(32.dp))
 
                 OutlinedTextField(
                     value = state.name,
                     onValueChange = { onIntent(SignupIntent.NameChanged(it)) },
                     modifier = Modifier.fillMaxWidth(),
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.auth_signup_name)) },
                     singleLine = true,
                     isError = state.nameError != null,
                     supportingText = state.nameError?.let { { Text(it) } },
@@ -112,11 +114,11 @@ private fun SignupContent(
                     onClick = { onIntent(SignupIntent.Submit) },
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !state.isLoading,
-                ) { Text("Sign up") }
+                ) { Text(stringResource(R.string.auth_signup_submit)) }
                 Spacer(Modifier.height(8.dp))
 
                 TextButton(onClick = { onIntent(SignupIntent.BackToLogin) }) {
-                    Text("Already have an account? Sign in")
+                    Text(stringResource(R.string.auth_signup_go_login))
                 }
             }
             if (state.isLoading) AppLoader()

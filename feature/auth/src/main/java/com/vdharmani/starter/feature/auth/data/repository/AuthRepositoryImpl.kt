@@ -2,6 +2,7 @@ package com.vdharmani.starter.feature.auth.data.repository
 
 import com.vdharmani.starter.core.database.dao.UserDao
 import com.vdharmani.starter.core.datastore.TokenStore
+import com.vdharmani.starter.core.network.apiCall
 import com.vdharmani.starter.feature.auth.data.mapper.toAuthToken
 import com.vdharmani.starter.feature.auth.data.mapper.toDomain
 import com.vdharmani.starter.feature.auth.data.mapper.toEntity
@@ -30,7 +31,7 @@ class AuthRepositoryImpl @Inject constructor(
     private val userDao: UserDao,
 ) : AuthRepository {
 
-    override suspend fun login(email: String, password: String): Result<AuthToken> = runCatching {
+    override suspend fun login(email: String, password: String): Result<AuthToken> = apiCall {
         val response = api.login(LoginRequestDto(email, password))
         val token = response.toAuthToken()
         tokenStore.save(token.accessToken, token.refreshToken)
@@ -40,7 +41,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signup(email: String, password: String, name: String): Result<AuthToken> =
-        runCatching {
+        apiCall {
             val response = api.signup(SignupRequestDto(email, password, name))
             val token = response.toAuthToken()
             tokenStore.save(token.accessToken, token.refreshToken)
@@ -49,31 +50,31 @@ class AuthRepositoryImpl @Inject constructor(
             token
         }
 
-    override suspend fun forgotPassword(email: String): Result<Unit> = runCatching {
+    override suspend fun forgotPassword(email: String): Result<Unit> = apiCall {
         api.forgotPassword(ForgotPasswordRequestDto(email))
     }
 
-    override suspend fun verifyOtp(email: String, otp: String): Result<ResetToken> = runCatching {
+    override suspend fun verifyOtp(email: String, otp: String): Result<ResetToken> = apiCall {
         ResetToken(api.verifyOtp(VerifyOtpRequestDto(email, otp)).resetToken)
     }
 
     override suspend fun resetPassword(token: ResetToken, newPassword: String): Result<Unit> =
-        runCatching {
+        apiCall {
             api.resetPassword(ResetPasswordRequestDto(token.value, newPassword))
         }
 
     override suspend fun changePassword(oldPassword: String, newPassword: String): Result<Unit> =
-        runCatching {
+        apiCall {
             api.changePassword(ChangePasswordRequestDto(oldPassword, newPassword))
         }
 
-    override suspend fun logout(): Result<Unit> = runCatching {
-        runCatching { api.logout() } // best-effort server-side invalidation
+    override suspend fun logout(): Result<Unit> = apiCall {
+        apiCall { api.logout() } // best-effort server-side invalidation
         tokenStore.clear()
         userDao.clear()
     }
 
-    override suspend fun deleteAccount(): Result<Unit> = runCatching {
+    override suspend fun deleteAccount(): Result<Unit> = apiCall {
         api.deleteAccount()
         tokenStore.clear()
         userDao.clear()

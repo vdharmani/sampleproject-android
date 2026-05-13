@@ -32,9 +32,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil.compose.AsyncImage
 import com.vdharmani.imagepicker.ImagePickerConfig
 import com.vdharmani.imagepicker.compose.composeImagePicker
 import com.vdharmani.starter.core.ui.components.AppLoader
@@ -134,11 +136,12 @@ private fun AvatarBubble(uri: Uri?) {
                 Text("👤", style = MaterialTheme.typography.displayLarge)
             }
         } else {
-            // For the template, render a placeholder. Junior swaps for Coil /
-            // an image-loading lib of their choice.
-            Box(contentAlignment = Alignment.Center) {
-                Text("✓", style = MaterialTheme.typography.displayMedium)
-            }
+            AsyncImage(
+                model = uri,
+                contentDescription = "Profile photo",
+                modifier = Modifier.size(120.dp),
+                contentScale = ContentScale.Crop,
+            )
         }
     }
 }

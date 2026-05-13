@@ -33,6 +33,7 @@ dependencies {
     api(libs.compose.foundation)
     api(libs.compose.ui)
     api(libs.compose.material3)
+    api(libs.coil.compose)
     implementation(libs.compose.ui.tooling.preview)
     debugImplementation(libs.compose.ui.tooling)
 }

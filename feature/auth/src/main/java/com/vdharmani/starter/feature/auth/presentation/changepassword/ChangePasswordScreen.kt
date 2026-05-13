@@ -24,12 +24,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vdharmani.starter.core.ui.components.AppLoader
 import com.vdharmani.starter.core.ui.components.PasswordField
+import com.vdharmani.starter.feature.auth.R
 
 @Composable
 fun ChangePasswordScreen(
@@ -60,28 +62,28 @@ fun ChangePasswordScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center,
                 ) {
-                    Text("Change password", style = MaterialTheme.typography.headlineMedium)
+                    Text(stringResource(R.string.auth_change_title), style = MaterialTheme.typography.headlineMedium)
                     Spacer(Modifier.height(32.dp))
 
                     PasswordField(
                         value = state.oldPassword,
                         onValueChange = { viewModel.handle(ChangePasswordIntent.OldPasswordChanged(it)) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = "Current password",
+                        label = stringResource(R.string.auth_change_current),
                     )
                     Spacer(Modifier.height(16.dp))
                     PasswordField(
                         value = state.newPassword,
                         onValueChange = { viewModel.handle(ChangePasswordIntent.NewPasswordChanged(it)) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = "New password",
+                        label = stringResource(R.string.auth_change_new),
                     )
                     Spacer(Modifier.height(16.dp))
                     PasswordField(
                         value = state.confirmPassword,
                         onValueChange = { viewModel.handle(ChangePasswordIntent.ConfirmPasswordChanged(it)) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = "Confirm new password",
+                        label = stringResource(R.string.auth_change_confirm),
                     )
                     Spacer(Modifier.height(24.dp))
 
@@ -89,10 +91,10 @@ fun ChangePasswordScreen(
                         onClick = { viewModel.handle(ChangePasswordIntent.Submit) },
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !state.isLoading,
-                    ) { Text("Update password") }
+                    ) { Text(stringResource(R.string.auth_change_submit)) }
                     Spacer(Modifier.height(8.dp))
 
-                    TextButton(onClick = onBack) { Text("Cancel") }
+                    TextButton(onClick = onBack) { Text(stringResource(R.string.auth_cancel)) }
                 }
             }
             if (state.isLoading) AppLoader()
@@ -109,16 +111,16 @@ private fun DoneConfirmation(onBack: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Text("Password updated", style = MaterialTheme.typography.headlineMedium)
+        Text(stringResource(R.string.auth_change_done_title), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(8.dp))
         Text(
-            "Your password was changed successfully.",
+            stringResource(R.string.auth_change_done_body),
             style = MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
         )
         Spacer(Modifier.height(32.dp))
         OutlinedButton(onClick = onBack, modifier = Modifier.fillMaxWidth()) {
-            Text("Back")
+            Text(stringResource(R.string.auth_back))
         }
     }
 }

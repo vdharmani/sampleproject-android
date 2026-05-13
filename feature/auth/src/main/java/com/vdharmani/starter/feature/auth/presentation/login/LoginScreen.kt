@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,6 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vdharmani.starter.core.ui.components.AppLoader
 import com.vdharmani.starter.core.ui.components.EmailField
 import com.vdharmani.starter.core.ui.components.PasswordField
+import com.vdharmani.starter.feature.auth.R
 
 /**
  * Login screen — connects the ViewModel to the dumb [LoginContent] composable.
@@ -100,12 +102,12 @@ private fun LoginForm(
         verticalArrangement = Arrangement.Center,
     ) {
         Text(
-            text = "Welcome back",
+            text = stringResource(R.string.auth_login_title),
             style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
         )
         Spacer(Modifier.height(8.dp))
         Text(
-            text = "Sign in to continue",
+            text = stringResource(R.string.auth_login_subtitle),
             style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
             textAlign = TextAlign.Center,
         )
@@ -131,7 +133,7 @@ private fun LoginForm(
             onClick = { onIntent(LoginIntent.GoToForgotPassword) },
             modifier = Modifier.align(Alignment.End),
         ) {
-            Text("Forgot password?")
+            Text(stringResource(R.string.auth_login_forgot))
         }
         Spacer(Modifier.height(16.dp))
 
@@ -140,12 +142,12 @@ private fun LoginForm(
             modifier = Modifier.fillMaxWidth(),
             enabled = !state.isLoading,
         ) {
-            Text("Sign in")
+            Text(stringResource(R.string.auth_login_submit))
         }
         Spacer(Modifier.height(16.dp))
 
         TextButton(onClick = { onIntent(LoginIntent.GoToSignup) }) {
-            Text("Don't have an account? Sign up")
+            Text(stringResource(R.string.auth_login_go_signup))
         }
     }
 }

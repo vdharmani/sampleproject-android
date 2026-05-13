@@ -23,11 +23,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.vdharmani.starter.core.ui.components.AppLoader
+import com.vdharmani.starter.feature.auth.R
 
 @Composable
 fun DeleteAccountScreen(
@@ -57,13 +59,12 @@ fun DeleteAccountScreen(
                 verticalArrangement = Arrangement.Center,
             ) {
                 Text(
-                    "Delete your account",
+                    stringResource(R.string.auth_delete_title),
                     style = MaterialTheme.typography.headlineMedium,
                 )
                 Spacer(Modifier.height(16.dp))
                 Text(
-                    "This will permanently remove your account and all your data. " +
-                        "This action cannot be undone.",
+                    stringResource(R.string.auth_delete_body),
                     style = MaterialTheme.typography.bodyMedium,
                     textAlign = TextAlign.Center,
                 )
@@ -77,10 +78,10 @@ fun DeleteAccountScreen(
                         contentColor = MaterialTheme.colorScheme.onError,
                     ),
                     enabled = !state.isLoading,
-                ) { Text("Delete account") }
+                ) { Text(stringResource(R.string.auth_delete_submit)) }
                 Spacer(Modifier.height(8.dp))
 
-                TextButton(onClick = onBack) { Text("Cancel") }
+                TextButton(onClick = onBack) { Text(stringResource(R.string.auth_cancel)) }
             }
             if (state.isLoading) AppLoader()
         }
@@ -88,17 +89,17 @@ fun DeleteAccountScreen(
         if (state.confirmationShown) {
             AlertDialog(
                 onDismissRequest = { viewModel.handle(DeleteAccountIntent.DismissConfirm) },
-                title = { Text("Are you sure?") },
-                text = { Text("Your account will be permanently deleted. You can't undo this.") },
+                title = { Text(stringResource(R.string.auth_delete_confirm_title)) },
+                text = { Text(stringResource(R.string.auth_delete_confirm_body)) },
                 confirmButton = {
                     TextButton(
                         onClick = { viewModel.handle(DeleteAccountIntent.ConfirmDelete) },
-                    ) { Text("Delete forever", color = MaterialTheme.colorScheme.error) }
+                    ) { Text(stringResource(R.string.auth_delete_confirm_yes), color = MaterialTheme.colorScheme.error) }
                 },
                 dismissButton = {
                     TextButton(
                         onClick = { viewModel.handle(DeleteAccountIntent.DismissConfirm) },
-                    ) { Text("Cancel") }
+                    ) { Text(stringResource(R.string.auth_cancel)) }
                 },
             )
         }
