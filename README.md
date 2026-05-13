@@ -1,4 +1,4 @@
-# android-starter
+# sampleproject-android
 
 A working, runnable Android **template repo** in MVI + Clean Architecture for
 your team. Clone, rename, point `BASE_URL` at your backend, start adding
@@ -24,7 +24,7 @@ features. Everything below ships pre-wired:
 ## Module map
 
 ```
-android-starter/
+sampleproject-android/
 ├── app/                                    ← Application + NavHost + theme entry
 ├── core/
 │   ├── common/                             ← Resource<T>, AppException sealed types
@@ -69,7 +69,7 @@ Junior reads `feature/auth/` top-to-bottom and can build any other feature
 ## Renaming for your project
 
 ```bash
-git clone https://github.com/vdharmani/android-starter my-app
+git clone https://github.com/vdharmani/sampleproject-android my-app
 cd my-app
 rm -rf .git && git init                       # fresh history
 # Find/replace `com.vdharmani.starter` → `com.myteam.myapp` (in Studio: 

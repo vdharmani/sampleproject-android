@@ -116,9 +116,9 @@ fi
 echo "[5/6] Updating rootProject.name in settings.gradle.kts…"
 new_root="$(echo "${NEW_PACKAGE##*.}" | tr '[:upper:]' '[:lower:]')"
 if [[ "$(uname)" == "Darwin" ]]; then
-    sed -i '' "s|rootProject.name = \"android-starter\"|rootProject.name = \"$new_root\"|g" settings.gradle.kts
+    sed -i '' "s|rootProject.name = \"sampleproject-android\"|rootProject.name = \"$new_root\"|g" settings.gradle.kts
 else
-    sed -i "s|rootProject.name = \"android-starter\"|rootProject.name = \"$new_root\"|g" settings.gradle.kts
+    sed -i "s|rootProject.name = \"sampleproject-android\"|rootProject.name = \"$new_root\"|g" settings.gradle.kts
 fi
 
 # 6. Update the app label.
