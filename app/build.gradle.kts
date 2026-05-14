@@ -17,8 +17,8 @@ android {
         applicationId = "com.vdharmani.starter"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 5
-        versionName = "0.5.0"
+        versionCode = 6
+        versionName = "1.0.0"
     }
 
     buildTypes {
