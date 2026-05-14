@@ -5,8 +5,10 @@ import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -51,6 +53,7 @@ fun LegalWebView(
                 },
             )
         },
+        contentWindowInsets = WindowInsets.safeDrawing,
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             WebViewHost(url = url, onLoadingChanged = { loading = it })

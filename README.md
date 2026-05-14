@@ -1,6 +1,6 @@
 # sampleproject-android
 
-A working, runnable Android **template repo** in MVI + Clean Architecture for
+A working, runnable Android **template repo** in **Clean Architecture** for
 your team. Clone, rename, point `BASE_URL` at your backend, start adding
 features. Everything below ships pre-wired:
 
@@ -9,15 +9,33 @@ features. Everything below ships pre-wired:
 - Retrofit 2 + OkHttp 5 + kotlinx.serialization
 - Auth interceptor + automatic refresh on 401
 - Room + DataStore Preferences (for tokens)
-- Jetpack Compose + Material 3 + Navigation Compose
-- MVI for every screen: `State` + `Intent` + `Effect`
+- Jetpack Compose + Material 3 + Navigation Compose (Kotlin-serialization type-safe routes)
+- Edge-to-edge + `WindowInsets.safeDrawing` on `Scaffold` content
+- **Release:** R8 minification + resource shrinking + `app/proguard-rules.pro`
 - Mock backend wired to **reqres.in** so the app runs without a real backend
 
-> **Phase 1 (this version):** project skeleton + all `core/*` modules + the
-> auth domain/data layers + the **Login** screen end-to-end. Signup, forgot
-> password, reset, change password, logout, and delete account use cases are
-> implemented in the domain layer — their UI screens land in subsequent
-> phases (or you ship them, copying the Login pattern).
+### UI state shape (team convention)
+
+Screens use an **MVI-style** split: **`UiState`** (what to render), **`Intent`**
+(sealed user/system actions the ViewModel handles), and **`Effect`** (one-shot
+events such as navigation or snackbars). That is a **deliberate template choice**
+so new contributors copy the same file set per screen.
+
+Google's own samples often use a **lighter** pattern: a single `UiState` data
+class plus ad-hoc events or callbacks without a named `Intent` hierarchy. Both
+approaches are valid; this repo standardizes on explicit Intent/Effect types for
+consistency across features, not because it is the only “correct” architecture.
+
+### What ships in this repo
+
+- **Navigation:** login, signup, forgot password, home hub, profile, change
+  password, delete account, premium, terms, privacy (see `AppNavGraph.kt` and
+  `AppDestinations.kt`).
+- **Auth:** domain + data layers (use cases, repository, Retrofit API, token
+  refresh) and **presentation** for login, signup, forgot, change password, and
+  delete account.
+- **Profile / premium / legal** feature modules with wired entry screens.
+- **Core** modules: common types, network, datastore, database, shared Compose UI.
 
 ---
 
@@ -36,12 +54,15 @@ sampleproject-android/
     └── auth/                               ← one feature, three layers inside
         ├── domain/                         ← PURE Kotlin: models, repository interface, use cases
         ├── data/                           ← Retrofit DTOs, mappers, AuthRepositoryImpl, Hilt bindings
-        └── presentation/login/             ← Screen + ViewModel + UiState + Intent + Effect
+        └── presentation/                   ← one subfolder per flow
+            ├── login/                      ← Screen + ViewModel + UiState + Intent + Effect
+            ├── signup/
+            └── …                           ← same pattern for forgot, change password, etc.
 ```
 
 **Dependency flow (Clean Architecture):**
 
-- `presentation` → `domain` (uses `LoginUseCase`, never the repository directly)
+- `presentation` → `domain` (calls use cases such as `LoginUseCase`, never the repository directly)
 - `data` → `domain` (implements `AuthRepository`)
 - `domain` → nothing (pure Kotlin — no Android, no Retrofit, no Room)
 
@@ -54,7 +75,7 @@ Junior reads `feature/auth/` top-to-bottom and can build any other feature
 
 1. Open in Android Studio Koala+ (anything that speaks AGP 8.13.x).
 2. The first sync downloads dependencies — wait it out.
-3. `./gradlew assembleDebug` confirms everything compiles.
+3. `./gradlew assembleDebug` confirms everything compiles; `./gradlew assembleRelease` verifies R8 + shrink rules (unsigned release APK for CI smoke tests).
 4. Run on a device/emulator. The login screen accepts:
    - email: `eve.holt@reqres.in`
    - password: `cityslicka`
@@ -80,28 +101,31 @@ rm -rf .git && git init                       # fresh history
 ./gradlew assembleDebug
 ```
 
-A `rename.sh` script automating this is on the roadmap (Phase 2).
+A `rename.sh` script automating this is on the roadmap.
 
 ---
 
-## Adding a new auth screen (e.g. Signup)
+## Adding a new auth flow (presentation layer)
 
-The use case + repo method already exist. The work is only the presentation
-layer — about **5 small files**, all in `feature/auth/presentation/signup/`:
+When the **domain + data** pieces already exist (use case + repository API), add
+the UI the same way every other auth flow in this repo does: about **five
+small files** under `feature/auth/presentation/<your-flow>/`.
 
-1. `SignupUiState.kt` — the data class describing what the screen renders.
-2. `SignupIntent.kt` — sealed interface of user actions
-   (`EmailChanged`, `NameChanged`, `Submit`, `GoToLogin`).
-3. `SignupEffect.kt` — sealed interface of one-shot events (`NavigateToHome`, `ShowError`).
-4. `SignupViewModel.kt` — `@HiltViewModel`, injects `SignupUseCase`, handles
-   intents, updates `MutableStateFlow<SignupUiState>`, emits effects.
-5. `SignupScreen.kt` — `@Composable`, collects state via
-   `collectAsStateWithLifecycle()`, renders fields + button.
+Use **`presentation/login/`** or **`presentation/signup/`** as the copy
+template (both are fully wired end-to-end). The usual file set:
 
-Then wire one composable() in `app/navigation/AppNavGraph.kt`. Done.
+1. `<Flow>UiState.kt` — data the screen renders.
+2. `<Flow>Intent.kt` — sealed user/system actions.
+3. `<Flow>Effect.kt` — one-shot events (navigation, errors).
+4. `<Flow>ViewModel.kt` — `@HiltViewModel`, collects intents, drives `StateFlow`, emits effects.
+5. `<Flow>Screen.kt` — `@Composable`; `collectAsStateWithLifecycle()` for state;
+   `LaunchedEffect` for effects.
 
-> Copy `presentation/login/` as the starting point. Every auth screen follows
-> the same shape — the boilerplate is intentional, juniors learn by mimicry.
+Then add a `@Serializable data object` route in `app/.../navigation/AppDestinations.kt`
+and a matching `composable<YourRoute> { … }` in `app/navigation/AppNavGraph.kt`.
+
+> The repeated **Intent / UiState / Effect** structure is intentional so the
+> team shares one mental model; it is not required by the Android framework.
 
 ---
 
@@ -164,6 +188,21 @@ That's it. The domain layer, ViewModels, and screens don't change.
 
 ---
 
+## Release builds (R8)
+
+The **release** build type turns on **code shrinking / obfuscation (R8)** and
+**resource shrinking** in `app/build.gradle.kts`. Custom keep rules live in
+[`app/proguard-rules.pro`](app/proguard-rules.pro) (Kotlin Serialization,
+Retrofit `AuthApi`, stack-trace attributes). Library AARs merge their own
+consumer Proguard rules (Hilt, OkHttp, Retrofit, etc.).
+
+- Smoke test: `./gradlew assembleRelease` (local release APK; configure signing
+  in CI or Android Studio for Play uploads).
+- If something breaks at runtime after an upgrade, add targeted `-keep` rules
+  rather than disabling minify.
+
+---
+
 ## Tech stack snapshot
 
 | | |
@@ -172,6 +211,7 @@ That's it. The domain layer, ViewModels, and screens don't change.
 | Kotlin | 2.2.21 |
 | KSP | 2.2.21-2.0.5 |
 | compileSdk / minSdk / targetSdk | 36 / 24 / 36 |
+| Release | R8 + shrink resources + `proguard-rules.pro` |
 | Compose runtime/UI | 1.11.1 |
 | Material 3 (Compose) | 1.4.0 |
 | Navigation Compose | 2.9.8 |

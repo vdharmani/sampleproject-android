@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -30,9 +31,9 @@ import com.vdharmani.starter.feature.premium.presentation.PremiumScreen
 import com.vdharmani.starter.feature.profile.presentation.profile.ProfileScreen
 
 /**
- * App-level navigation. Every screen sits behind a `composable("route")`.
+ * App-level navigation. Every screen sits behind a typed `composable<…>` route.
  * Cross-screen navigation goes through the `on…` lambdas you pass into the
- * Screen — the Screen never imports `NavController` directly.
+ * Screen — the Screen never imports [NavController] directly.
  */
 @Composable
 fun AppNavGraph() {
@@ -40,64 +41,64 @@ fun AppNavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Routes.Login,
+        startDestination = RouteLogin,
     ) {
-        composable(Routes.Login) {
+        composable<RouteLogin> {
             LoginScreen(
                 onAuthed = { navController.toHomeClearing() },
-                onGoSignup = { navController.navigate(Routes.Signup) },
-                onGoForgot = { navController.navigate(Routes.Forgot) },
+                onGoSignup = { navController.navigate(RouteSignup) },
+                onGoForgot = { navController.navigate(RouteForgot) },
             )
         }
 
-        composable(Routes.Signup) {
+        composable<RouteSignup> {
             SignupScreen(
                 onAuthed = { navController.toHomeClearing() },
                 onBackToLogin = { navController.popBackStack() },
             )
         }
 
-        composable(Routes.Forgot) {
+        composable<RouteForgot> {
             ForgotPasswordScreen(onBackToLogin = { navController.popBackStack() })
         }
 
-        composable(Routes.Home) {
+        composable<RouteHome> {
             HomeScreen(
-                onProfile = { navController.navigate(Routes.Profile) },
-                onPremium = { navController.navigate(Routes.Premium) },
-                onTerms = { navController.navigate(Routes.Terms) },
-                onPrivacy = { navController.navigate(Routes.Privacy) },
+                onProfile = { navController.navigate(RouteProfile) },
+                onPremium = { navController.navigate(RoutePremium) },
+                onTerms = { navController.navigate(RouteTerms) },
+                onPrivacy = { navController.navigate(RoutePrivacy) },
             )
         }
 
-        composable(Routes.Profile) {
+        composable<RouteProfile> {
             ProfileScreen(
                 onLoggedOut = { navController.toLoginClearing() },
-                onChangePassword = { navController.navigate(Routes.ChangePassword) },
-                onDeleteAccount = { navController.navigate(Routes.DeleteAccount) },
+                onChangePassword = { navController.navigate(RouteChangePassword) },
+                onDeleteAccount = { navController.navigate(RouteDeleteAccount) },
             )
         }
 
-        composable(Routes.ChangePassword) {
+        composable<RouteChangePassword> {
             ChangePasswordScreen(onBack = { navController.popBackStack() })
         }
 
-        composable(Routes.DeleteAccount) {
+        composable<RouteDeleteAccount> {
             DeleteAccountScreen(
                 onBack = { navController.popBackStack() },
                 onAccountDeleted = { navController.toLoginClearing() },
             )
         }
 
-        composable(Routes.Premium) {
+        composable<RoutePremium> {
             PremiumScreen(onBack = { navController.popBackStack() })
         }
 
-        composable(Routes.Terms) {
+        composable<RouteTerms> {
             TermsScreen(onBack = { navController.popBackStack() })
         }
 
-        composable(Routes.Privacy) {
+        composable<RoutePrivacy> {
             PrivacyScreen(onBack = { navController.popBackStack() })
         }
     }
@@ -113,6 +114,7 @@ private fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .safeDrawingPadding()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -132,28 +134,15 @@ private fun HomeScreen(
 // -- nav helpers ------------------------------------------------------------
 
 private fun NavController.toHomeClearing() {
-    navigate(Routes.Home) {
-        popUpTo(graph.startDestinationId) { inclusive = true }
+    navigate(RouteHome) {
+        popUpTo<RouteLogin> { inclusive = true }
         launchSingleTop = true
     }
 }
 
 private fun NavController.toLoginClearing() {
-    navigate(Routes.Login) {
-        popUpTo(graph.startDestinationId) { inclusive = true }
+    navigate(RouteLogin) {
+        popUpTo<RouteLogin> { inclusive = true }
         launchSingleTop = true
     }
-}
-
-private object Routes {
-    const val Login = "login"
-    const val Signup = "signup"
-    const val Forgot = "forgot"
-    const val Home = "home"
-    const val Profile = "profile"
-    const val ChangePassword = "change-password"
-    const val DeleteAccount = "delete-account"
-    const val Premium = "premium"
-    const val Terms = "terms"
-    const val Privacy = "privacy"
 }
