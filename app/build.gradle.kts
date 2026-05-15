@@ -17,8 +17,8 @@ android {
         applicationId = "com.sample.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 11
-        versionName = "1.1.4"
+        versionCode = 12
+        versionName = "1.1.5"
 
         buildConfigField("String", "BASE_URL", "\"https://reqres.in/api/\"")
         // REPLACE with your own RevenueCat Android public API key when wiring

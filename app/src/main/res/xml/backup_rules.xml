@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-    Backup rules for Android 11 and below (android:fullBackupContent).
-    Backups stay enabled for good migration UX — only secrets are excluded.
--->
-<full-backup-content>
-    <!-- Never back up the encrypted auth-token store. -->
-    <exclude domain="file" path="datastore/auth_tokens.preferences_pb" />
-</full-backup-content>
