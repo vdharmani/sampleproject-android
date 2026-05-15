@@ -35,9 +35,13 @@ object NetworkModule {
         authenticator: TokenRefreshAuthenticator,
     ): OkHttpClient {
         val logging = HttpLoggingInterceptor().apply {
-            // Bodies in dev; headers-only in release.
+            // Full bodies in dev only. Release logs nothing — header-level
+            // logging would write `Authorization: Bearer …` to logcat, which
+            // adb / log-collecting SDKs / rooted devices can read.
             level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-            else HttpLoggingInterceptor.Level.HEADERS
+            else HttpLoggingInterceptor.Level.NONE
+            // Belt-and-braces: redact the bearer token even when logging is on.
+            redactHeader("Authorization")
         }
         return OkHttpClient.Builder()
             .connectTimeout(15, TimeUnit.SECONDS)

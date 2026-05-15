@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Blocks all cleartext (HTTP) traffic — the app talks HTTPS only. This is
+    the default the platform applies from API 28+, declared explicitly here
+    so it also covers minSdk 24–27 (where cleartext is otherwise allowed).
+
+    To hit a local HTTP backend during development, add a domain-config that
+    permits cleartext for that host only, e.g. the emulator loopback:
+
+      <domain-config cleartextTrafficPermitted="true">
+          <domain includeSubdomains="true">10.0.2.2</domain>
+      </domain-config>
+
+    This is also the place to add certificate pinning (<pin-set>) later.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>

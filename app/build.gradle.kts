@@ -17,8 +17,8 @@ android {
         applicationId = "com.vdharmani.starter"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 9
-        versionName = "1.1.2"
+        versionCode = 10
+        versionName = "1.1.3"
 
         buildConfigField("String", "BASE_URL", "\"https://reqres.in/api/\"")
         // REPLACE with your own RevenueCat Android public API key when wiring

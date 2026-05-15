@@ -9,6 +9,7 @@ features. Everything below ships pre-wired:
 - Retrofit 2 + OkHttp 5 + kotlinx.serialization
 - Auth interceptor + automatic refresh on 401
 - Room + DataStore Preferences (auth tokens encrypted at rest via Android Keystore AES-256-GCM)
+- Security hardening: HTTPS-only (network security config blocks cleartext), auth tokens excluded from cloud/device backups, bearer headers never logged in release
 - Jetpack Compose + Material 3 + Navigation Compose (Kotlin-serialization type-safe routes)
 - Edge-to-edge + `WindowInsets.safeDrawing` on `Scaffold` content
 - **Release:** R8 minification + resource shrinking + `app/proguard-rules.pro`
