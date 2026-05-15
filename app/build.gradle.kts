@@ -17,8 +17,8 @@ android {
         applicationId = "com.vdharmani.starter"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 7
-        versionName = "1.1.0"
+        versionCode = 8
+        versionName = "1.1.1"
 
         buildConfigField("String", "BASE_URL", "\"https://reqres.in/api/\"")
         // REPLACE with your own RevenueCat Android public API key when wiring
@@ -108,5 +108,6 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt.lifecycle.viewmodel.compose)
     ksp(libs.hilt.compiler)
 }
