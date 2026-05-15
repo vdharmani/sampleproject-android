@@ -1,82 +1,72 @@
 package com.vdharmani.starter.core.datastore
 
-import android.content.Context
-import android.content.SharedPreferences
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKey
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import com.vdharmani.starter.core.security.KeystoreCrypto
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.map
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
  * Persists the auth tokens, **encrypted at rest**.
  *
- * Backed by [EncryptedSharedPreferences] (Android Keystore + AES-256-GCM).
- * The previous DataStore Preferences impl stored tokens in plain XML — fine
- * for non-sensitive prefs, but bad for credentials. This is what's safe to
- * sit on disk while the app is uninstalled-but-cached, or to keep around
- * if a user's device is later compromised.
+ * Storage is DataStore Preferences; each token string is encrypted with
+ * [KeystoreCrypto] (AES-256-GCM, key held in the Android Keystore) before it
+ * is written, so the on-disk file never contains plaintext credentials.
  *
- * Junior tip: read/write are suspend (off the main thread); the
- * [authTokenFlow] is a MutableStateFlow we update manually so emissions
- * stay synchronous with save/clear.
+ * This replaces the previous EncryptedSharedPreferences implementation — that
+ * whole library (`androidx.security:security-crypto`) was deprecated by Google
+ * with no drop-in successor; Keystore + DataStore is the recommended path.
+ *
+ * Junior tip: reads/writes are `suspend` (DataStore is async by design), and
+ * [authTokenFlow] reflects every write automatically — no manual emission.
  */
 @Singleton
 class TokenStore @Inject constructor(
-    @ApplicationContext private val context: Context,
+    private val dataStore: DataStore<Preferences>,
+    private val crypto: KeystoreCrypto,
 ) {
 
-    private val prefs: SharedPreferences by lazy {
-        val masterKey = MasterKey.Builder(context)
-            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
-            .build()
-        EncryptedSharedPreferences.create(
-            context,
-            FILE_NAME,
-            masterKey,
-            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-        )
-    }
-
-    private val _authTokenFlow = MutableStateFlow(readSnapshot())
-    val authTokenFlow: Flow<StoredAuthToken?> = _authTokenFlow.asStateFlow()
+    val authTokenFlow: Flow<StoredAuthToken?> = dataStore.data
+        .catch { cause ->
+            // A corrupt/missing file should read as "no tokens", not crash.
+            if (cause is IOException) emit(emptyPreferences()) else throw cause
+        }
+        .map { prefs ->
+            val access = prefs[KEY_ACCESS]?.let(::decryptOrNull)
+            val refresh = prefs[KEY_REFRESH]?.let(::decryptOrNull)
+            if (access.isNullOrEmpty()) null
+            else StoredAuthToken(access, refresh.orEmpty())
+        }
 
     /** One-shot read for callers that don't need to observe (e.g. interceptors). */
     suspend fun read(): StoredAuthToken? = authTokenFlow.first()
 
     suspend fun save(accessToken: String, refreshToken: String) {
-        withContext(Dispatchers.IO) {
-            prefs.edit()
-                .putString(KEY_ACCESS, accessToken)
-                .putString(KEY_REFRESH, refreshToken)
-                .apply()
+        dataStore.edit { prefs ->
+            prefs[KEY_ACCESS] = crypto.encrypt(accessToken)
+            prefs[KEY_REFRESH] = crypto.encrypt(refreshToken)
         }
-        _authTokenFlow.value = StoredAuthToken(accessToken, refreshToken)
     }
 
     suspend fun clear() {
-        withContext(Dispatchers.IO) { prefs.edit().clear().apply() }
-        _authTokenFlow.value = null
+        dataStore.edit { it.clear() }
     }
 
-    private fun readSnapshot(): StoredAuthToken? {
-        val access = prefs.getString(KEY_ACCESS, null)
-        val refresh = prefs.getString(KEY_REFRESH, null)
-        return if (access.isNullOrEmpty()) null
-        else StoredAuthToken(access, refresh.orEmpty())
-    }
+    /** Decrypt defensively — a key reset or tampered value yields null, not a crash. */
+    private fun decryptOrNull(value: String): String? =
+        runCatching { crypto.decrypt(value) }.getOrNull()
 
     private companion object {
-        const val FILE_NAME = "starter_auth_secure"
-        const val KEY_ACCESS = "access_token"
-        const val KEY_REFRESH = "refresh_token"
+        val KEY_ACCESS = stringPreferencesKey("access_token")
+        val KEY_REFRESH = stringPreferencesKey("refresh_token")
     }
 }
 

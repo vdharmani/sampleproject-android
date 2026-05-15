@@ -17,8 +17,8 @@ android {
         applicationId = "com.vdharmani.starter"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 8
-        versionName = "1.1.1"
+        versionCode = 9
+        versionName = "1.1.2"
 
         buildConfigField("String", "BASE_URL", "\"https://reqres.in/api/\"")
         // REPLACE with your own RevenueCat Android public API key when wiring
@@ -91,9 +91,8 @@ dependencies {
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
 
-    // DataStore + encrypted preferences
+    // DataStore — auth tokens encrypted at rest via core/security/KeystoreCrypto
     implementation(libs.datastore.preferences)
-    implementation(libs.androidx.security.crypto)
 
     // Image loading
     implementation(libs.coil.compose)

@@ -1,14 +1,34 @@
 package com.vdharmani.starter.core.datastore.di
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.PreferenceDataStoreFactory
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStoreFile
 import dagger.Module
+import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 /**
- * TokenStore is `@Singleton` with `@Inject constructor`, so Hilt provides it
- * automatically. This module is a placeholder for future store bindings (e.g.
- * UserPreferencesStore) — leave it so juniors have a clear place to add them.
+ * Supplies the `DataStore<Preferences>` that backs
+ * [com.vdharmani.starter.core.datastore.TokenStore]. `TokenStore` itself is
+ * `@Inject`-constructed, so it isn't bound here.
+ *
+ * Junior tip: if you add a second store (e.g. UserPreferencesStore), give each
+ * `DataStore<Preferences>` its own `@Qualifier` so Hilt can tell them apart.
  */
 @Module
 @InstallIn(SingletonComponent::class)
-object DataStoreModule
+object DataStoreModule {
+
+    @Provides
+    @Singleton
+    fun provideAuthDataStore(
+        @ApplicationContext context: Context,
+    ): DataStore<Preferences> = PreferenceDataStoreFactory.create {
+        context.preferencesDataStoreFile("auth_tokens")
+    }
+}

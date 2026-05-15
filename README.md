@@ -8,7 +8,7 @@ features. Everything below ships pre-wired:
 - Hilt DI, KSP-based code-gen (no kapt)
 - Retrofit 2 + OkHttp 5 + kotlinx.serialization
 - Auth interceptor + automatic refresh on 401
-- Room + DataStore Preferences (for tokens)
+- Room + DataStore Preferences (auth tokens encrypted at rest via Android Keystore AES-256-GCM)
 - Jetpack Compose + Material 3 + Navigation Compose (Kotlin-serialization type-safe routes)
 - Edge-to-edge + `WindowInsets.safeDrawing` on `Scaffold` content
 - **Release:** R8 minification + resource shrinking + `app/proguard-rules.pro`
@@ -54,7 +54,8 @@ sampleproject-android/
         ├── core/                               ← shared infrastructure
         │   ├── common/                         ← Resource<T>, AppException sealed types
         │   ├── network/                        ← OkHttp + Retrofit + interceptors
-        │   ├── datastore/                      ← TokenStore (encrypted-ish prefs)
+        │   ├── security/                       ← KeystoreCrypto (AES-256-GCM, Android Keystore)
+        │   ├── datastore/                      ← TokenStore (tokens encrypted at rest)
         │   ├── database/                       ← Room + UserDao
         │   └── ui/                             ← theme, AppLoader, AppErrorDialog, EmailField, PasswordField
         └── feature/                            ← one package per feature

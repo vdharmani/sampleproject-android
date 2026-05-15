@@ -27,7 +27,6 @@ okhttp = "5.3.2"
 
 room = "2.8.4"
 datastorePrefs = "1.2.1"
-securityCrypto = "1.1.0"
 coil = "2.7.0"
 
 [libraries]
@@ -66,9 +65,6 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 
 # DataStore
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePrefs" }
-
-# Security — encrypted shared preferences (Android Keystore-backed)
-androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 
 # Image loading
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
