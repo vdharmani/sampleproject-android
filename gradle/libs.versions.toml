@@ -17,7 +17,6 @@ navigationCompose = "2.9.8"
 
 composeRuntime = "1.11.1"
 composeUi = "1.11.1"
-composeIconsCore = "1.7.8"
 material3 = "1.4.0"
 materialXml = "1.13.0"
 
@@ -30,9 +29,6 @@ room = "2.8.4"
 datastorePrefs = "1.2.1"
 securityCrypto = "1.1.0"
 coil = "2.7.0"
-
-junit = "4.13.2"
-robolectric = "4.16.1"
 
 [libraries]
 # AndroidX
@@ -52,7 +48,6 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "composeUi" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "material3" }
 google-material = { module = "com.google.android.material:material", version.ref = "materialXml" }
-compose-material-icons-core = { module = "androidx.compose.material:material-icons-core", version.ref = "composeIconsCore" }
 
 # Coroutines + Serialization
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -78,14 +73,6 @@ androidx-security-crypto = { module = "androidx.security:security-crypto", versi
 # Image loading
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
-# Testing
-junit = { module = "junit:junit", version.ref = "junit" }
-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-okhttp-mockwebserver = { module = "com.squareup.okhttp3:mockwebserver", version.ref = "okhttp" }
-robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
-compose-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "composeUi" }
-compose-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "composeUi" }
-
 # Hilt
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
@@ -93,7 +80,6 @@ hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", ve
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-plugin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

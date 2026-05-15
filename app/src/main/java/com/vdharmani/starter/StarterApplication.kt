@@ -1,7 +1,8 @@
 package com.vdharmani.starter
 
 import android.app.Application
-import com.vdharmani.starter.feature.premium.BuildConfig
+import android.util.Log
+import com.vdharmani.starter.BuildConfig
 import com.vdharmani.subscription.SubscriptionManager
 import com.vdharmani.subscription.revenuecat.RevenueCatProvider
 import dagger.hilt.android.HiltAndroidApp
@@ -11,11 +12,18 @@ class StarterApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         // Subscription provider — RevenueCat under the hood. Junior swaps
-        // REVENUECAT_KEY in feature/premium/build.gradle.kts to ship a real
-        // key. The placeholder value lets the template build but purchases
-        // will fail until the key is real.
-        SubscriptionManager.initialize(
-            RevenueCatProvider(this, BuildConfig.REVENUECAT_KEY),
-        )
+        // REVENUECAT_KEY in app/build.gradle.kts to ship a real key.
+        //
+        // Wrapped defensively: the placeholder key (and any future bad key)
+        // makes RevenueCat throw on init. A third-party SDK failing to start
+        // must not crash app launch — purchases simply stay unavailable until
+        // a real key is in place.
+        runCatching {
+            SubscriptionManager.initialize(
+                RevenueCatProvider(this, BuildConfig.REVENUECAT_KEY),
+            )
+        }.onFailure {
+            Log.w("StarterApplication", "Subscription provider init failed — purchases disabled", it)
+        }
     }
 }

@@ -10,7 +10,7 @@
 #      across all .kt source files (replaces the package declaration AND
 #      every import that references it).
 #   2. Moves the source directories so they match the new package path.
-#   3. Updates `namespace` in every module's build.gradle.kts.
+#   3. Updates `namespace` in app/build.gradle.kts.
 #   4. Updates `applicationId` in app/build.gradle.kts.
 #   5. Updates `rootProject.name` in settings.gradle.kts.
 #   6. Updates the app label in res/values/strings.xml.
@@ -134,8 +134,8 @@ echo "✓ Rename complete."
 echo ""
 echo "Next steps:"
 echo "  1. Sanity-check the rename:   ./gradlew assembleDebug"
-echo "  2. Update BASE_URL:           core/network/build.gradle.kts → buildConfigField(\"String\", \"BASE_URL\", …)"
-echo "  3. Update REVENUECAT_KEY:     feature/premium/build.gradle.kts (if using subscriptions)"
+echo "  2. Update BASE_URL:           app/build.gradle.kts → buildConfigField(\"String\", \"BASE_URL\", …)"
+echo "  3. Update REVENUECAT_KEY:     app/build.gradle.kts (if using subscriptions)"
 echo "  4. Drop the starter git history and start fresh:"
 echo "       rm -rf .git && git init && git add -A && git commit -m \"Initial commit\""
 echo ""

@@ -1,9 +1,0 @@
-<resources>
-    <!--
-        Legal feature strings. Prefixed with `legal_` so they don't collide
-        with other feature modules' resources when the AAR is merged.
-    -->
-    <string name="legal_back">Back</string>
-    <string name="legal_terms_title">Terms of Service</string>
-    <string name="legal_privacy_title">Privacy Policy</string>
-</resources>

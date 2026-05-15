@@ -23,12 +23,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "sampleproject-android"
 include(":app")
-include(":core:common")
-include(":core:datastore")
-include(":core:network")
-include(":core:database")
-include(":core:ui")
-include(":feature:auth")
-include(":feature:profile")
-include(":feature:premium")
-include(":feature:legal")

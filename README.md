@@ -4,7 +4,7 @@ A working, runnable Android **template repo** in **Clean Architecture** for
 your team. Clone, rename, point `BASE_URL` at your backend, start adding
 features. Everything below ships pre-wired:
 
-- Multi-module Gradle (`:app` + `:core:*` + `:feature:*`)
+- Single-module Gradle (`:app`), organized **package-by-feature**
 - Hilt DI, KSP-based code-gen (no kapt)
 - Retrofit 2 + OkHttp 5 + kotlinx.serialization
 - Auth interceptor + automatic refresh on 401
@@ -34,30 +34,38 @@ consistency across features, not because it is the only “correct” architectu
 - **Auth:** domain + data layers (use cases, repository, Retrofit API, token
   refresh) and **presentation** for login, signup, forgot, change password, and
   delete account.
-- **Profile / premium / legal** feature modules with wired entry screens.
-- **Core** modules: common types, network, datastore, database, shared Compose UI.
+- **Profile / premium / legal** feature packages with wired entry screens.
+- **Core** packages: common types, network, datastore, database, shared Compose UI.
 
 ---
 
-## Module map
+## Package map
+
+Single module — everything lives in `:app`, organized **package-by-feature**.
+Each feature keeps the Clean Architecture layer split (`domain` / `data` /
+`presentation`) inside its own package.
 
 ```
 sampleproject-android/
-├── app/                                    ← Application + NavHost + theme entry
-├── core/
-│   ├── common/                             ← Resource<T>, AppException sealed types
-│   ├── network/                            ← OkHttp + Retrofit + interceptors
-│   ├── datastore/                          ← TokenStore (encrypted-ish prefs)
-│   ├── database/                           ← Room + UserDao
-│   └── ui/                                 ← theme, AppLoader, AppErrorDialog, EmailField, PasswordField
-└── feature/
-    └── auth/                               ← one feature, three layers inside
-        ├── domain/                         ← PURE Kotlin: models, repository interface, use cases
-        ├── data/                           ← Retrofit DTOs, mappers, AuthRepositoryImpl, Hilt bindings
-        └── presentation/                   ← one subfolder per flow
-            ├── login/                      ← Screen + ViewModel + UiState + Intent + Effect
-            ├── signup/
-            └── …                           ← same pattern for forgot, change password, etc.
+└── app/                                        ← the only Gradle module
+    └── src/main/java/com/vdharmani/starter/
+        ├── MainActivity.kt, StarterApplication.kt
+        ├── navigation/                         ← AppNavGraph + type-safe routes
+        ├── core/                               ← shared infrastructure
+        │   ├── common/                         ← Resource<T>, AppException sealed types
+        │   ├── network/                        ← OkHttp + Retrofit + interceptors
+        │   ├── datastore/                      ← TokenStore (encrypted-ish prefs)
+        │   ├── database/                       ← Room + UserDao
+        │   └── ui/                             ← theme, AppLoader, AppErrorDialog, EmailField, PasswordField
+        └── feature/                            ← one package per feature
+            ├── auth/                           ← one feature, three layers inside
+            │   ├── domain/                     ← PURE Kotlin: models, repository interface, use cases
+            │   ├── data/                       ← Retrofit DTOs, mappers, AuthRepositoryImpl, Hilt bindings
+            │   └── presentation/               ← one subfolder per flow
+            │       ├── login/                  ← Screen + ViewModel + UiState + Intent + Effect
+            │       ├── signup/
+            │       └── …                       ← same pattern for forgot, change password, etc.
+            ├── profile/, premium/, legal/      ← wired entry screens
 ```
 
 **Dependency flow (Clean Architecture):**
@@ -96,7 +104,7 @@ git clone https://github.com/vdharmani/sampleproject-android my-app
 cd my-app
 rm -rf .git && git init                       # fresh history
 ./rename.sh com.myteam.myapp "My App"         # new package id, new app name
-# Then update BASE_URL in core/network/build.gradle.kts (buildConfigField)
+# Then update BASE_URL in app/build.gradle.kts (buildConfigField)
 ./gradlew assembleDebug
 ```
 
@@ -131,20 +139,22 @@ and a matching `composable<YourRoute> { … }` in `app/navigation/AppNavGraph.kt
 
 ---
 
-## Adding a new feature module
+## Adding a new feature
+
+No new Gradle module — a feature is just a package under `feature/`.
 
 ```bash
-# 1. Make folders
-mkdir -p feature/profile/src/main/java/com/yourteam/yourapp/feature/profile/{domain/{model,repository,usecase},data/{remote/dto,mapper,repository,di},presentation}
-
-# 2. Copy feature/auth/build.gradle.kts → feature/profile/build.gradle.kts,
-#    change `namespace`, add only the deps the new feature needs.
-
-# 3. Add to settings.gradle.kts:
-#    include(":feature:profile")
-
-# 4. Add an `implementation(project(":feature:profile"))` line to app/build.gradle.kts.
+# 1. Make the package folders
+mkdir -p app/src/main/java/com/vdharmani/starter/feature/profile/{domain/{model,repository,usecase},data/{remote/dto,mapper,repository,di},presentation}
 ```
+
+2. Build the layers the same way `feature/auth/` does — `domain` (pure Kotlin
+   use cases + repository interface), `data` (Retrofit + `RepositoryImpl` +
+   Hilt bindings), `presentation` (one subfolder per screen).
+3. Wire a `@Serializable` route in `navigation/AppDestinations.kt` and a
+   matching `composable<…>` in `navigation/AppNavGraph.kt`.
+
+Any new dependencies go straight into `app/build.gradle.kts`.
 
 ---
 
@@ -180,7 +190,7 @@ When a future authenticated request returns 401:
 
 Three files touch:
 
-1. `core/network/build.gradle.kts` — change the
+1. `app/build.gradle.kts` — change the
    `buildConfigField("String", "BASE_URL", "...")` line.
 2. `feature/auth/data/remote/AuthApi.kt` — adjust endpoint paths if needed.
 3. `feature/auth/data/mapper/AuthMappers.kt` — adjust DTO ↔ domain mapping

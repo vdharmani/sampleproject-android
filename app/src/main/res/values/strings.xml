@@ -7,4 +7,79 @@
     <string name="home_premium">Premium</string>
     <string name="home_terms">Terms</string>
     <string name="home_privacy">Privacy</string>
+
+    <!-- ==================== Auth ==================== -->
+    <!-- Common -->
+    <string name="auth_email">Email</string>
+    <string name="auth_password">Password</string>
+    <string name="auth_back_to_login">Back to login</string>
+    <string name="auth_cancel">Cancel</string>
+    <string name="auth_back">Back</string>
+
+    <!-- Login -->
+    <string name="auth_login_title">Welcome back</string>
+    <string name="auth_login_subtitle">Sign in to continue</string>
+    <string name="auth_login_submit">Sign in</string>
+    <string name="auth_login_forgot">Forgot password?</string>
+    <string name="auth_login_go_signup">Don\'t have an account? Sign up</string>
+    <string name="auth_login_failed">Login failed</string>
+
+    <!-- Signup -->
+    <string name="auth_signup_title">Create your account</string>
+    <string name="auth_signup_name">Name</string>
+    <string name="auth_signup_submit">Sign up</string>
+    <string name="auth_signup_go_login">Already have an account? Sign in</string>
+    <string name="auth_signup_failed">Sign-up failed</string>
+
+    <!-- Forgot password -->
+    <string name="auth_forgot_title">Forgot your password?</string>
+    <string name="auth_forgot_subtitle">Enter your email and we\'ll send you a reset link.</string>
+    <string name="auth_forgot_submit">Send reset link</string>
+    <string name="auth_forgot_sent_title">Check your inbox</string>
+    <string name="auth_forgot_sent_body">If an account exists for %1$s, we\'ve sent a reset link.</string>
+    <string name="auth_forgot_failed">Failed to send</string>
+
+    <!-- Change password -->
+    <string name="auth_change_title">Change password</string>
+    <string name="auth_change_current">Current password</string>
+    <string name="auth_change_new">New password</string>
+    <string name="auth_change_confirm">Confirm new password</string>
+    <string name="auth_change_submit">Update password</string>
+    <string name="auth_change_done_title">Password updated</string>
+    <string name="auth_change_done_body">Your password was changed successfully.</string>
+    <string name="auth_change_failed">Failed to change password</string>
+
+    <!-- Delete account -->
+    <string name="auth_delete_title">Delete your account</string>
+    <string name="auth_delete_body">This will permanently remove your account and all your data. This action cannot be undone.</string>
+    <string name="auth_delete_submit">Delete account</string>
+    <string name="auth_delete_confirm_title">Are you sure?</string>
+    <string name="auth_delete_confirm_body">Your account will be permanently deleted. You can\'t undo this.</string>
+    <string name="auth_delete_confirm_yes">Delete forever</string>
+    <string name="auth_delete_failed">Failed to delete account</string>
+
+    <!-- ==================== Legal ==================== -->
+    <string name="legal_back">Back</string>
+    <string name="legal_terms_title">Terms of Service</string>
+    <string name="legal_privacy_title">Privacy Policy</string>
+
+    <!-- ==================== Premium ==================== -->
+    <string name="premium_title_member">You\'re a Premium member 🎉</string>
+    <string name="premium_title_upsell">Go Premium</string>
+    <string name="premium_subtitle_member">Thanks for your support — all features are unlocked.</string>
+    <string name="premium_subtitle_upsell">Unlock all features with a monthly subscription.</string>
+    <string name="premium_subscribe_cta">Subscribe — $4.99/mo</string>
+    <string name="premium_restore">Restore purchases</string>
+    <string name="premium_back">Back</string>
+    <string name="premium_purchase_failed">Purchase failed</string>
+    <string name="premium_restore_failed">Restore failed</string>
+
+    <!-- ==================== Profile ==================== -->
+    <string name="profile_avatar_camera">Camera</string>
+    <string name="profile_avatar_gallery">Gallery</string>
+    <string name="profile_avatar_content_description">Profile photo</string>
+    <string name="profile_loading">Loading…</string>
+    <string name="profile_change_password">Change password</string>
+    <string name="profile_log_out">Log out</string>
+    <string name="profile_delete_account">Delete account</string>
 </resources>
