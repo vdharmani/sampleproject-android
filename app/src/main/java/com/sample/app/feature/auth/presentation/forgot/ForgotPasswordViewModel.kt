@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.app.feature.auth.domain.usecase.ForgotPasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,19 +13,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class ForgotPasswordViewModel @Inject constructor(
-    private val forgotPassword: ForgotPasswordUseCase,
-) : ViewModel() {
+class ForgotPasswordViewModel @Inject constructor(private val forgotPassword: ForgotPasswordUseCase) : ViewModel() {
 
     private val _state = MutableStateFlow(ForgotPasswordUiState())
     val state: StateFlow<ForgotPasswordUiState> = _state.asStateFlow()
 
     private val _effects = Channel<ForgotPasswordEffect>(
         capacity = Channel.BUFFERED,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val effects = _effects.receiveAsFlow()
 

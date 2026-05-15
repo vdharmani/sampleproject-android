@@ -13,6 +13,7 @@ features. Everything below ships pre-wired:
 - Jetpack Compose + Material 3 + Navigation Compose (Kotlin-serialization type-safe routes)
 - Edge-to-edge + `WindowInsets.safeDrawing` on `Scaffold` content
 - **Release:** R8 minification + resource shrinking + `app/proguard-rules.pro`
+- **Static-analysis gate:** detekt (code smells) + ktlint (formatting), enforced in CI
 - Mock backend wired to **reqres.in** so the app runs without a real backend
 
 ### UI state shape (team convention)
@@ -217,6 +218,27 @@ consumer Proguard rules (Hilt, OkHttp, Retrofit, etc.).
 
 ---
 
+## Code quality
+
+Two static-analysis tools run on every push / PR (see
+`.github/workflows/build.yml`) — a violation **fails the build**, so style and
+smells can't be merged:
+
+- **ktlint** — formatting (indentation, import order, spacing). Config lives in
+  `.editorconfig`.
+- **detekt** — code smells (complexity, magic numbers, generic catches). Config
+  lives in `config/detekt/detekt.yml`, layered on detekt's default ruleset.
+
+Run them locally:
+
+```bash
+./gradlew ktlintFormat      # auto-fix formatting
+./gradlew ktlintCheck detekt # the gate — what CI runs
+./gradlew check             # both, plus everything else
+```
+
+---
+
 ## Tech stack snapshot
 
 | | |
@@ -226,6 +248,7 @@ consumer Proguard rules (Hilt, OkHttp, Retrofit, etc.).
 | KSP | 2.2.21-2.0.5 |
 | compileSdk / minSdk / targetSdk | 36 / 24 / 36 |
 | Release | R8 + shrink resources + `proguard-rules.pro` |
+| Static analysis | detekt 1.23.8 + ktlint-gradle 14.2.0 |
 | Compose runtime/UI | 1.11.1 |
 | Material 3 (Compose) | 1.4.0 |
 | Navigation Compose | 2.9.8 |

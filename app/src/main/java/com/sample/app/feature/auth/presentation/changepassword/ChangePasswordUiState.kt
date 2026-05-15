@@ -5,5 +5,5 @@ data class ChangePasswordUiState(
     val newPassword: String = "",
     val confirmPassword: String = "",
     val isLoading: Boolean = false,
-    val done: Boolean = false,
+    val done: Boolean = false
 )

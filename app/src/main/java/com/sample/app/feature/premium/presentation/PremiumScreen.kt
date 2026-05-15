@@ -18,7 +18,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -46,9 +45,7 @@ import kotlinx.coroutines.launch
  * configured in your RevenueCat dashboard.
  */
 @Composable
-fun PremiumScreen(
-    onBack: () -> Unit,
-) {
+fun PremiumScreen(onBack: () -> Unit) {
     val sub = ComposeSubscription()
     val info by sub.customerInfo
     val isPremium = info?.hasEntitlement(PREMIUM_ENTITLEMENT) == true
@@ -58,7 +55,7 @@ fun PremiumScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { padding ->
         Column(
             modifier = Modifier
@@ -66,22 +63,22 @@ fun PremiumScreen(
                 .fillMaxSize()
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = stringResource(
-                    if (isPremium) R.string.premium_title_member else R.string.premium_title_upsell,
+                    if (isPremium) R.string.premium_title_member else R.string.premium_title_upsell
                 ),
                 style = MaterialTheme.typography.headlineMedium,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(
-                    if (isPremium) R.string.premium_subtitle_member else R.string.premium_subtitle_upsell,
+                    if (isPremium) R.string.premium_subtitle_member else R.string.premium_subtitle_upsell
                 ),
                 style = MaterialTheme.typography.bodyMedium,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Center
             )
             Spacer(Modifier.height(32.dp))
 
@@ -100,7 +97,7 @@ fun PremiumScreen(
                                 }
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 ) { Text(stringResource(R.string.premium_subscribe_cta)) }
                 Spacer(Modifier.height(12.dp))
             }
@@ -113,7 +110,7 @@ fun PremiumScreen(
                         }
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
             ) { Text(stringResource(R.string.premium_restore)) }
 
             Spacer(Modifier.height(24.dp))

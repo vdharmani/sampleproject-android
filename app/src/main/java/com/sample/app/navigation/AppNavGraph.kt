@@ -17,11 +17,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.sample.app.R
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sample.app.R
 import com.sample.app.feature.auth.presentation.changepassword.ChangePasswordScreen
 import com.sample.app.feature.auth.presentation.deleteaccount.DeleteAccountScreen
 import com.sample.app.feature.auth.presentation.forgot.ForgotPasswordScreen
@@ -43,20 +43,20 @@ fun AppNavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = RouteLogin,
+        startDestination = RouteLogin
     ) {
         composable<RouteLogin> {
             LoginScreen(
                 onAuthed = { navController.toHomeClearing() },
                 onGoSignup = { navController.navigate(RouteSignup) },
-                onGoForgot = { navController.navigate(RouteForgot) },
+                onGoForgot = { navController.navigate(RouteForgot) }
             )
         }
 
         composable<RouteSignup> {
             SignupScreen(
                 onAuthed = { navController.toHomeClearing() },
-                onBackToLogin = { navController.popBackStack() },
+                onBackToLogin = { navController.popBackStack() }
             )
         }
 
@@ -69,7 +69,7 @@ fun AppNavGraph() {
                 onProfile = { navController.navigate(RouteProfile) },
                 onPremium = { navController.navigate(RoutePremium) },
                 onTerms = { navController.navigate(RouteTerms) },
-                onPrivacy = { navController.navigate(RoutePrivacy) },
+                onPrivacy = { navController.navigate(RoutePrivacy) }
             )
         }
 
@@ -77,7 +77,7 @@ fun AppNavGraph() {
             ProfileScreen(
                 onLoggedOut = { navController.toLoginClearing() },
                 onChangePassword = { navController.navigate(RouteChangePassword) },
-                onDeleteAccount = { navController.navigate(RouteDeleteAccount) },
+                onDeleteAccount = { navController.navigate(RouteDeleteAccount) }
             )
         }
 
@@ -88,7 +88,7 @@ fun AppNavGraph() {
         composable<RouteDeleteAccount> {
             DeleteAccountScreen(
                 onBack = { navController.popBackStack() },
-                onAccountDeleted = { navController.toLoginClearing() },
+                onAccountDeleted = { navController.toLoginClearing() }
             )
         }
 
@@ -107,19 +107,14 @@ fun AppNavGraph() {
 }
 
 @Composable
-private fun HomeScreen(
-    onProfile: () -> Unit,
-    onPremium: () -> Unit,
-    onTerms: () -> Unit,
-    onPrivacy: () -> Unit,
-) {
+private fun HomeScreen(onProfile: () -> Unit, onPremium: () -> Unit, onTerms: () -> Unit, onPrivacy: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .safeDrawingPadding()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(stringResource(R.string.home_signed_in), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(32.dp))

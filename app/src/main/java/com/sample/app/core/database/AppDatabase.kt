@@ -8,7 +8,7 @@ import com.sample.app.core.database.entity.UserEntity
 @Database(
     entities = [UserEntity::class],
     version = 1,
-    exportSchema = true,
+    exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao

@@ -6,6 +6,7 @@ import com.sample.app.feature.auth.domain.model.AuthState
 import com.sample.app.feature.auth.domain.usecase.LogoutUseCase
 import com.sample.app.feature.auth.domain.usecase.ObserveAuthStateUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,12 +15,11 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     observeAuthState: ObserveAuthStateUseCase,
-    private val logoutUseCase: LogoutUseCase,
+    private val logoutUseCase: LogoutUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileUiState())
@@ -27,7 +27,7 @@ class ProfileViewModel @Inject constructor(
 
     private val _effects = Channel<ProfileEffect>(
         capacity = Channel.BUFFERED,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val effects = _effects.receiveAsFlow()
 

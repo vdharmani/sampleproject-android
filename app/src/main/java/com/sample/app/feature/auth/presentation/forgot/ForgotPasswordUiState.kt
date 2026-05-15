@@ -6,5 +6,5 @@ data class ForgotPasswordUiState(
     val emailError: String? = null,
     /** Flips to `true` after the API call succeeds, so the screen can swap
      *  to a "check your inbox" confirmation state. */
-    val sent: Boolean = false,
+    val sent: Boolean = false
 )

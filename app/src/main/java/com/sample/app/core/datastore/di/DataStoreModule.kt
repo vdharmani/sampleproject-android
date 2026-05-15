@@ -26,9 +26,8 @@ object DataStoreModule {
 
     @Provides
     @Singleton
-    fun provideAuthDataStore(
-        @ApplicationContext context: Context,
-    ): DataStore<Preferences> = PreferenceDataStoreFactory.create {
-        context.preferencesDataStoreFile("auth_tokens")
-    }
+    fun provideAuthDataStore(@ApplicationContext context: Context): DataStore<Preferences> =
+        PreferenceDataStoreFactory.create {
+            context.preferencesDataStoreFile("auth_tokens")
+        }
 }

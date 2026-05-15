@@ -31,15 +31,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sample.app.R
 import com.sample.app.core.ui.components.AppLoader
 import com.sample.app.core.ui.components.EmailField
-import com.sample.app.R
 
 @Composable
-fun ForgotPasswordScreen(
-    onBackToLogin: () -> Unit,
-    viewModel: ForgotPasswordViewModel = hiltViewModel(),
-) {
+fun ForgotPasswordScreen(onBackToLogin: () -> Unit, viewModel: ForgotPasswordViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -56,9 +53,12 @@ fun ForgotPasswordScreen(
         state = state,
         snackbarHostState = snackbarHostState,
         onIntent = { intent ->
-            if (intent is ForgotPasswordIntent.BackToLogin) onBackToLogin()
-            else viewModel.handle(intent)
-        },
+            if (intent is ForgotPasswordIntent.BackToLogin) {
+                onBackToLogin()
+            } else {
+                viewModel.handle(intent)
+            }
+        }
     )
 }
 
@@ -66,15 +66,18 @@ fun ForgotPasswordScreen(
 private fun ForgotPasswordContent(
     state: ForgotPasswordUiState,
     snackbarHostState: SnackbarHostState,
-    onIntent: (ForgotPasswordIntent) -> Unit,
+    onIntent: (ForgotPasswordIntent) -> Unit
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
-            if (state.sent) SentConfirmation(email = state.email, onBack = { onIntent(ForgotPasswordIntent.BackToLogin) })
-            else ForgotPasswordForm(state = state, onIntent = onIntent)
+            if (state.sent) {
+                SentConfirmation(email = state.email, onBack = { onIntent(ForgotPasswordIntent.BackToLogin) })
+            } else {
+                ForgotPasswordForm(state = state, onIntent = onIntent)
+            }
 
             if (state.isLoading) AppLoader()
         }
@@ -82,27 +85,24 @@ private fun ForgotPasswordContent(
 }
 
 @Composable
-private fun ForgotPasswordForm(
-    state: ForgotPasswordUiState,
-    onIntent: (ForgotPasswordIntent) -> Unit,
-) {
+private fun ForgotPasswordForm(state: ForgotPasswordUiState, onIntent: (ForgotPasswordIntent) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(R.string.auth_forgot_title),
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineMedium
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.auth_forgot_subtitle),
             style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(32.dp))
 
@@ -110,14 +110,14 @@ private fun ForgotPasswordForm(
             value = state.email,
             onValueChange = { onIntent(ForgotPasswordIntent.EmailChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
-            error = state.emailError,
+            error = state.emailError
         )
         Spacer(Modifier.height(24.dp))
 
         Button(
             onClick = { onIntent(ForgotPasswordIntent.Submit) },
             modifier = Modifier.fillMaxWidth(),
-            enabled = !state.isLoading && state.email.isNotBlank(),
+            enabled = !state.isLoading && state.email.isNotBlank()
         ) {
             Text(stringResource(R.string.auth_forgot_submit))
         }
@@ -136,17 +136,17 @@ private fun SentConfirmation(email: String, onBack: () -> Unit) {
             .fillMaxSize()
             .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(R.string.auth_forgot_sent_title),
-            style = MaterialTheme.typography.headlineMedium,
+            style = MaterialTheme.typography.headlineMedium
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.auth_forgot_sent_body, email),
             style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(32.dp))
         OutlinedButton(onClick = onBack, modifier = Modifier.fillMaxWidth()) {

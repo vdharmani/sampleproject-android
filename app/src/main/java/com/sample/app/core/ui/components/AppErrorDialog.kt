@@ -14,7 +14,7 @@ fun AppErrorDialog(
     title: String = "Something went wrong",
     message: String,
     confirmText: String = "OK",
-    onDismiss: () -> Unit,
+    onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -22,6 +22,6 @@ fun AppErrorDialog(
         text = { Text(message) },
         confirmButton = {
             TextButton(onClick = onDismiss) { Text(confirmText) }
-        },
+        }
     )
 }

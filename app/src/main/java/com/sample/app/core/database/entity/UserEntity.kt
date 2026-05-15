@@ -10,9 +10,4 @@ import androidx.room.PrimaryKey
  * evolve without breaking domain code.
  */
 @Entity(tableName = "users")
-data class UserEntity(
-    @PrimaryKey val id: String,
-    val email: String,
-    val name: String,
-    val avatarUrl: String?,
-)
+data class UserEntity(@PrimaryKey val id: String, val email: String, val name: String, val avatarUrl: String?)

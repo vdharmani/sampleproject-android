@@ -4,8 +4,16 @@ import com.sample.app.core.common.AppException
 import com.sample.app.core.common.HttpException
 import com.sample.app.core.common.NetworkException
 import com.sample.app.core.common.UnauthorizedException
-import retrofit2.HttpException as RetrofitHttpException
 import java.io.IOException
+import retrofit2.HttpException as RetrofitHttpException
+
+// @PublishedApi: referenced from the public `inline fun apiCall`, which is
+// inlined at call sites and so cannot see plain private/internal members.
+@PublishedApi
+internal const val HTTP_UNAUTHORIZED = 401
+
+@PublishedApi
+internal const val HTTP_FORBIDDEN = 403
 
 /**
  * Wraps a suspend API call and maps the well-known transport-level
@@ -16,22 +24,23 @@ import java.io.IOException
  * — losing the ability to dispatch on "this is a network problem" vs.
  * "the server actually said no."
  */
-suspend inline fun <T> apiCall(crossinline block: suspend () -> T): Result<T> {
-    return try {
-        Result.success(block())
-    } catch (e: IOException) {
-        Result.failure(NetworkException(cause = e))
-    } catch (e: RetrofitHttpException) {
-        Result.failure(
-            when (e.code()) {
-                401, 403 -> UnauthorizedException(cause = e)
-                else -> HttpException(code = e.code(), cause = e)
-            },
-        )
-    } catch (e: AppException) {
-        // Already mapped — let it through.
-        Result.failure(e)
-    } catch (e: Exception) {
-        Result.failure(e)
-    }
+// Boundary catch-all: every failure is converted to a typed Result.failure,
+// so catching the generic Exception as the final arm is intentional here.
+@Suppress("TooGenericExceptionCaught")
+suspend inline fun <T> apiCall(crossinline block: suspend () -> T): Result<T> = try {
+    Result.success(block())
+} catch (e: IOException) {
+    Result.failure(NetworkException(cause = e))
+} catch (e: RetrofitHttpException) {
+    Result.failure(
+        when (e.code()) {
+            HTTP_UNAUTHORIZED, HTTP_FORBIDDEN -> UnauthorizedException(cause = e)
+            else -> HttpException(code = e.code(), cause = e)
+        }
+    )
+} catch (e: AppException) {
+    // Already mapped — let it through.
+    Result.failure(e)
+} catch (e: Exception) {
+    Result.failure(e)
 }

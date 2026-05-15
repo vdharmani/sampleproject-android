@@ -17,19 +17,19 @@ fun AuthResponseDto.toAuthToken(): AuthToken = AuthToken(
     // reqres.in doesn't issue refresh tokens — fake one for the demo.
     // Replace `refreshToken ?: ""` with `refreshToken!!` once the real
     // backend returns a proper refresh.
-    refreshToken = refreshToken ?: "",
+    refreshToken = refreshToken ?: ""
 )
 
 fun AuthToken.toStored(): StoredAuthToken = StoredAuthToken(accessToken, refreshToken)
 
 fun AuthResponseDto.toUserOrNull(): User? {
     val effectiveEmail = email ?: return null
-    val effectiveId = id?.toString() ?: effectiveEmail   // reqres ids are ints
+    val effectiveId = id?.toString() ?: effectiveEmail // reqres ids are ints
     return User(
         id = effectiveId,
         email = effectiveEmail,
         name = name ?: effectiveEmail.substringBefore('@'),
-        avatarUrl = avatar,
+        avatarUrl = avatar
     )
 }
 
@@ -37,12 +37,12 @@ fun User.toEntity(): UserEntity = UserEntity(
     id = id,
     email = email,
     name = name,
-    avatarUrl = avatarUrl,
+    avatarUrl = avatarUrl
 )
 
 fun UserEntity.toDomain(): User = User(
     id = id,
     email = email,
     name = name,
-    avatarUrl = avatarUrl,
+    avatarUrl = avatarUrl
 )

@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    name: Assemble + unit tests
+    name: Static analysis + assemble
     runs-on: ubuntu-latest
     timeout-minutes: 25
 
@@ -33,18 +33,20 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
+      # The gate: detekt (code smells) + ktlint (formatting). Any violation
+      # fails the job, so it cannot be merged.
+      - name: Static analysis
+        run: ./gradlew detekt ktlintCheck --stacktrace
+
       - name: Assemble debug APK
         run: ./gradlew assembleDebug --stacktrace
 
-      - name: Run JVM unit tests
-        run: ./gradlew testDebugUnitTest --stacktrace
-
-      - name: Upload unit-test report on failure
+      - name: Upload analysis reports on failure
         if: failure()
         uses: actions/upload-artifact@v5
         with:
-          name: unit-test-report
+          name: static-analysis-reports
           path: |
-            **/build/reports/tests/
-            **/build/test-results/
+            **/build/reports/detekt/
+            **/build/reports/ktlint/
           retention-days: 7

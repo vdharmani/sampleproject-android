@@ -15,10 +15,8 @@ import javax.inject.Singleton
  * Lives here so `core:network` doesn't depend on auth-specific types.
  */
 @Singleton
-class AuthTokenRefresher @Inject constructor(
-    private val api: AuthApi,
-    private val tokenStore: TokenStore,
-) : TokenRefresher {
+class AuthTokenRefresher @Inject constructor(private val api: AuthApi, private val tokenStore: TokenStore) :
+    TokenRefresher {
 
     override suspend fun refresh(refreshToken: String): StoredAuthToken? {
         // No refresh token to use — give up immediately.

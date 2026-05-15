@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
+    alias(libs.plugins.detekt)
+    alias(libs.plugins.ktlint)
 }
 
 android {
@@ -17,8 +19,8 @@ android {
         applicationId = "com.sample.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 12
-        versionName = "1.1.5"
+        versionCode = 13
+        versionName = "1.2.0"
 
         buildConfigField("String", "BASE_URL", "\"https://reqres.in/api/\"")
         // REPLACE with your own RevenueCat Android public API key when wiring
@@ -33,7 +35,7 @@ android {
             isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
+                "proguard-rules.pro"
             )
         }
     }
@@ -56,6 +58,21 @@ kotlin {
 ksp {
     arg("room.schemaLocation", "$projectDir/schemas")
     arg("room.incremental", "true")
+}
+
+// --- Static analysis ---------------------------------------------------------
+// `./gradlew check` runs both. detekt = code smells; ktlint = formatting.
+// CI fails the build on any violation (see .github/workflows/build.yml).
+
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(rootProject.files("config/detekt/detekt.yml"))
+    parallel = true
+}
+
+ktlint {
+    android.set(true)
+    // Rules are resolved from .editorconfig at the repo root.
 }
 
 dependencies {

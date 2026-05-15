@@ -31,15 +31,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sample.app.R
 import com.sample.app.core.ui.components.AppLoader
 import com.sample.app.core.ui.components.PasswordField
-import com.sample.app.R
 
 @Composable
-fun ChangePasswordScreen(
-    onBack: () -> Unit,
-    viewModel: ChangePasswordViewModel = hiltViewModel(),
-) {
+fun ChangePasswordScreen(onBack: () -> Unit, viewModel: ChangePasswordViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -53,7 +50,7 @@ fun ChangePasswordScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             if (state.done) {
@@ -65,7 +62,7 @@ fun ChangePasswordScreen(
                         .verticalScroll(rememberScrollState())
                         .padding(horizontal = 24.dp, vertical = 32.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Center
                 ) {
                     Text(stringResource(R.string.auth_change_title), style = MaterialTheme.typography.headlineMedium)
                     Spacer(Modifier.height(32.dp))
@@ -74,28 +71,28 @@ fun ChangePasswordScreen(
                         value = state.oldPassword,
                         onValueChange = { viewModel.handle(ChangePasswordIntent.OldPasswordChanged(it)) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(R.string.auth_change_current),
+                        label = stringResource(R.string.auth_change_current)
                     )
                     Spacer(Modifier.height(16.dp))
                     PasswordField(
                         value = state.newPassword,
                         onValueChange = { viewModel.handle(ChangePasswordIntent.NewPasswordChanged(it)) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(R.string.auth_change_new),
+                        label = stringResource(R.string.auth_change_new)
                     )
                     Spacer(Modifier.height(16.dp))
                     PasswordField(
                         value = state.confirmPassword,
                         onValueChange = { viewModel.handle(ChangePasswordIntent.ConfirmPasswordChanged(it)) },
                         modifier = Modifier.fillMaxWidth(),
-                        label = stringResource(R.string.auth_change_confirm),
+                        label = stringResource(R.string.auth_change_confirm)
                     )
                     Spacer(Modifier.height(24.dp))
 
                     Button(
                         onClick = { viewModel.handle(ChangePasswordIntent.Submit) },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !state.isLoading,
+                        enabled = !state.isLoading
                     ) { Text(stringResource(R.string.auth_change_submit)) }
                     Spacer(Modifier.height(8.dp))
 
@@ -114,14 +111,14 @@ private fun DoneConfirmation(onBack: () -> Unit) {
             .fillMaxSize()
             .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(stringResource(R.string.auth_change_done_title), style = MaterialTheme.typography.headlineMedium)
         Spacer(Modifier.height(8.dp))
         Text(
             stringResource(R.string.auth_change_done_body),
             style = MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(32.dp))
         OutlinedButton(onClick = onBack, modifier = Modifier.fillMaxWidth()) {

@@ -1,0 +1,39 @@
+# detekt configuration — overrides layered on top of the default ruleset
+# (app/build.gradle.kts sets buildUponDefaultConfig = true). Only the rules
+# that need tuning for a Jetpack Compose codebase are listed here.
+
+complexity:
+  LongMethod:
+    # Screen-level @Composable functions are legitimately long.
+    ignoreAnnotated: ['Composable', 'Preview']
+  LongParameterList:
+    # Composables hoist state and callbacks as parameters by design.
+    ignoreAnnotated: ['Composable']
+  TooManyFunctions:
+    # MVI files and Hilt @Module objects hold many small, cohesive functions.
+    active: false
+
+naming:
+  FunctionNaming:
+    # @Composable functions are PascalCase by Compose convention.
+    ignoreAnnotated: ['Composable']
+
+style:
+  MagicNumber:
+    # dp / sp / weight literals are pervasive in Compose UI code.
+    ignoreAnnotated: ['Composable', 'Preview']
+    ignorePropertyDeclaration: true
+    ignoreCompanionObjectPropertyDeclaration: true
+  MaxLineLength:
+    # Line length is owned by ktlint (see .editorconfig).
+    active: false
+  UnusedPrivateMember:
+    # @Preview composables look unused to static analysis.
+    ignoreAnnotated: ['Preview']
+  ForbiddenComment:
+    # A template legitimately ships placeholder/guidance comments.
+    active: false
+  ReturnCount:
+    # Guard clauses (validate-then-return) are good style — don't count them.
+    max: 3
+    excludeGuardClauses: true

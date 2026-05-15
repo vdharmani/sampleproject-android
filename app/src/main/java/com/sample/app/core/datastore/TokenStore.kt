@@ -6,13 +6,13 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.sample.app.core.security.KeystoreCrypto
+import java.io.IOException
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
-import java.io.IOException
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Persists the auth tokens, **encrypted at rest**.
@@ -31,7 +31,7 @@ import javax.inject.Singleton
 @Singleton
 class TokenStore @Inject constructor(
     private val dataStore: DataStore<Preferences>,
-    private val crypto: KeystoreCrypto,
+    private val crypto: KeystoreCrypto
 ) {
 
     val authTokenFlow: Flow<StoredAuthToken?> = dataStore.data
@@ -42,8 +42,11 @@ class TokenStore @Inject constructor(
         .map { prefs ->
             val access = prefs[KEY_ACCESS]?.let(::decryptOrNull)
             val refresh = prefs[KEY_REFRESH]?.let(::decryptOrNull)
-            if (access.isNullOrEmpty()) null
-            else StoredAuthToken(access, refresh.orEmpty())
+            if (access.isNullOrEmpty()) {
+                null
+            } else {
+                StoredAuthToken(access, refresh.orEmpty())
+            }
         }
 
     /** One-shot read for callers that don't need to observe (e.g. interceptors). */
@@ -61,8 +64,7 @@ class TokenStore @Inject constructor(
     }
 
     /** Decrypt defensively — a key reset or tampered value yields null, not a crash. */
-    private fun decryptOrNull(value: String): String? =
-        runCatching { crypto.decrypt(value) }.getOrNull()
+    private fun decryptOrNull(value: String): String? = runCatching { crypto.decrypt(value) }.getOrNull()
 
     private companion object {
         val KEY_ACCESS = stringPreferencesKey("access_token")

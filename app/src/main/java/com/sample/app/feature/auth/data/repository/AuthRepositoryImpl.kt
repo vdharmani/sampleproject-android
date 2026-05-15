@@ -19,16 +19,16 @@ import com.sample.app.feature.auth.domain.model.AuthToken
 import com.sample.app.feature.auth.domain.model.ResetToken
 import com.sample.app.feature.auth.domain.model.User
 import com.sample.app.feature.auth.domain.repository.AuthRepository
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
     private val api: AuthApi,
     private val tokenStore: TokenStore,
-    private val userDao: UserDao,
+    private val userDao: UserDao
 ) : AuthRepository {
 
     override suspend fun login(email: String, password: String): Result<AuthToken> = apiCall {
@@ -40,15 +40,14 @@ class AuthRepositoryImpl @Inject constructor(
         token
     }
 
-    override suspend fun signup(email: String, password: String, name: String): Result<AuthToken> =
-        apiCall {
-            val response = api.signup(SignupRequestDto(email, password, name))
-            val token = response.toAuthToken()
-            tokenStore.save(token.accessToken, token.refreshToken)
-            response.toUserOrNull()?.let { userDao.upsert(it.toEntity()) }
-                ?: userDao.upsert(User(id = email, email = email, name = name).toEntity())
-            token
-        }
+    override suspend fun signup(email: String, password: String, name: String): Result<AuthToken> = apiCall {
+        val response = api.signup(SignupRequestDto(email, password, name))
+        val token = response.toAuthToken()
+        tokenStore.save(token.accessToken, token.refreshToken)
+        response.toUserOrNull()?.let { userDao.upsert(it.toEntity()) }
+            ?: userDao.upsert(User(id = email, email = email, name = name).toEntity())
+        token
+    }
 
     override suspend fun forgotPassword(email: String): Result<Unit> = apiCall {
         api.forgotPassword(ForgotPasswordRequestDto(email))
@@ -58,15 +57,13 @@ class AuthRepositoryImpl @Inject constructor(
         ResetToken(api.verifyOtp(VerifyOtpRequestDto(email, otp)).resetToken)
     }
 
-    override suspend fun resetPassword(token: ResetToken, newPassword: String): Result<Unit> =
-        apiCall {
-            api.resetPassword(ResetPasswordRequestDto(token.value, newPassword))
-        }
+    override suspend fun resetPassword(token: ResetToken, newPassword: String): Result<Unit> = apiCall {
+        api.resetPassword(ResetPasswordRequestDto(token.value, newPassword))
+    }
 
-    override suspend fun changePassword(oldPassword: String, newPassword: String): Result<Unit> =
-        apiCall {
-            api.changePassword(ChangePasswordRequestDto(oldPassword, newPassword))
-        }
+    override suspend fun changePassword(oldPassword: String, newPassword: String): Result<Unit> = apiCall {
+        api.changePassword(ChangePasswordRequestDto(oldPassword, newPassword))
+    }
 
     override suspend fun logout(): Result<Unit> = apiCall {
         apiCall { api.logout() } // best-effort server-side invalidation
@@ -82,8 +79,11 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun observeAuthState(): Flow<AuthState> =
         tokenStore.authTokenFlow.combine(userDao.observeCurrent()) { token, userEntity ->
-            if (token == null) AuthState.SignedOut
-            else AuthState.SignedIn(userEntity?.toDomain() ?: User(id = "", email = "", name = ""))
+            if (token == null) {
+                AuthState.SignedOut
+            } else {
+                AuthState.SignedIn(userEntity?.toDomain() ?: User(id = "", email = "", name = ""))
+            }
         }
 
     override suspend fun currentUser(): User? {

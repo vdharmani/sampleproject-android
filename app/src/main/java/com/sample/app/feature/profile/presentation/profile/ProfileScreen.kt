@@ -33,24 +33,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.sample.app.R
+import com.sample.app.core.ui.components.AppLoader
 import com.vdharmani.imagepicker.ImagePickerConfig
 import com.vdharmani.imagepicker.compose.composeImagePicker
-import com.sample.app.core.ui.components.AppLoader
-import com.sample.app.R
 
 @Composable
 fun ProfileScreen(
     onLoggedOut: () -> Unit,
     onChangePassword: () -> Unit,
     onDeleteAccount: () -> Unit,
-    viewModel: ProfileViewModel = hiltViewModel(),
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -71,12 +71,12 @@ fun ProfileScreen(
     val picker = composeImagePicker(
         authority = "${context.packageName}.provider",
         config = remember { ImagePickerConfig() },
-        onPicked = { uri: Uri -> viewModel.handle(ProfileIntent.AvatarPicked(uri)) },
+        onPicked = { uri: Uri -> viewModel.handle(ProfileIntent.AvatarPicked(uri)) }
     )
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             Column(
@@ -84,7 +84,7 @@ fun ProfileScreen(
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
                     .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AvatarBubble(uri = state.localAvatarUri)
                 Spacer(Modifier.height(16.dp))
@@ -109,14 +109,14 @@ fun ProfileScreen(
 
                 OutlinedButton(
                     onClick = onChangePassword,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
                 ) { Text(stringResource(R.string.profile_change_password)) }
                 Spacer(Modifier.height(12.dp))
 
                 OutlinedButton(
                     onClick = { viewModel.handle(ProfileIntent.Logout) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !state.isLoggingOut,
+                    enabled = !state.isLoggingOut
                 ) { Text(stringResource(R.string.profile_log_out)) }
                 Spacer(Modifier.height(12.dp))
 
@@ -125,8 +125,8 @@ fun ProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError,
-                    ),
+                        contentColor = MaterialTheme.colorScheme.onError
+                    )
                 ) { Text(stringResource(R.string.profile_delete_account)) }
             }
             if (state.isLoggingOut) AppLoader()
@@ -140,7 +140,7 @@ private fun AvatarBubble(uri: Uri?) {
         modifier = Modifier
             .size(120.dp)
             .clip(CircleShape),
-        color = MaterialTheme.colorScheme.surfaceVariant,
+        color = MaterialTheme.colorScheme.surfaceVariant
     ) {
         if (uri == null) {
             Box(contentAlignment = Alignment.Center) {
@@ -151,7 +151,7 @@ private fun AvatarBubble(uri: Uri?) {
                 model = uri,
                 contentDescription = stringResource(R.string.profile_avatar_content_description),
                 modifier = Modifier.size(120.dp),
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.Crop
             )
         }
     }

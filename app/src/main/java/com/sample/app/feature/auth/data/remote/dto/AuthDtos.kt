@@ -20,19 +20,17 @@ data class VerifyOtpRequestDto(val email: String, val otp: String)
 @Serializable
 data class ResetPasswordRequestDto(
     @SerialName("reset_token") val resetToken: String,
-    @SerialName("new_password") val newPassword: String,
+    @SerialName("new_password") val newPassword: String
 )
 
 @Serializable
 data class ChangePasswordRequestDto(
     @SerialName("old_password") val oldPassword: String,
-    @SerialName("new_password") val newPassword: String,
+    @SerialName("new_password") val newPassword: String
 )
 
 @Serializable
-data class RefreshTokenRequestDto(
-    @SerialName("refresh_token") val refreshToken: String,
-)
+data class RefreshTokenRequestDto(@SerialName("refresh_token") val refreshToken: String)
 
 // ---- Response bodies --------------------------------------------------------
 
@@ -46,10 +44,8 @@ data class AuthResponseDto(
     @SerialName("refresh_token") val refreshToken: String? = null,
     val email: String? = null,
     val name: String? = null,
-    val avatar: String? = null,
+    val avatar: String? = null
 )
 
 @Serializable
-data class VerifyOtpResponseDto(
-    @SerialName("reset_token") val resetToken: String,
-)
+data class VerifyOtpResponseDto(@SerialName("reset_token") val resetToken: String)

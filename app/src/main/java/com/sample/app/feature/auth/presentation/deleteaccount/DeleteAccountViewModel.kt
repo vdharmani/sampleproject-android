@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.app.feature.auth.domain.usecase.DeleteAccountUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,19 +13,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
-class DeleteAccountViewModel @Inject constructor(
-    private val deleteAccount: DeleteAccountUseCase,
-) : ViewModel() {
+class DeleteAccountViewModel @Inject constructor(private val deleteAccount: DeleteAccountUseCase) : ViewModel() {
 
     private val _state = MutableStateFlow(DeleteAccountUiState())
     val state: StateFlow<DeleteAccountUiState> = _state.asStateFlow()
 
     private val _effects = Channel<DeleteAccountEffect>(
         capacity = Channel.BUFFERED,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val effects = _effects.receiveAsFlow()
 

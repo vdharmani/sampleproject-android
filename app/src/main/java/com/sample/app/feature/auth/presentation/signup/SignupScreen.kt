@@ -32,17 +32,13 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sample.app.R
 import com.sample.app.core.ui.components.AppLoader
 import com.sample.app.core.ui.components.EmailField
 import com.sample.app.core.ui.components.PasswordField
-import com.sample.app.R
 
 @Composable
-fun SignupScreen(
-    onAuthed: () -> Unit,
-    onBackToLogin: () -> Unit,
-    viewModel: SignupViewModel = hiltViewModel(),
-) {
+fun SignupScreen(onAuthed: () -> Unit, onBackToLogin: () -> Unit, viewModel: SignupViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -59,9 +55,12 @@ fun SignupScreen(
         state = state,
         snackbarHostState = snackbarHostState,
         onIntent = { intent ->
-            if (intent is SignupIntent.BackToLogin) onBackToLogin()
-            else viewModel.handle(intent)
-        },
+            if (intent is SignupIntent.BackToLogin) {
+                onBackToLogin()
+            } else {
+                viewModel.handle(intent)
+            }
+        }
     )
 }
 
@@ -69,11 +68,11 @@ fun SignupScreen(
 private fun SignupContent(
     state: SignupUiState,
     snackbarHostState: SnackbarHostState,
-    onIntent: (SignupIntent) -> Unit,
+    onIntent: (SignupIntent) -> Unit
 ) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             Column(
@@ -82,7 +81,7 @@ private fun SignupContent(
                     .verticalScroll(rememberScrollState())
                     .padding(horizontal = 24.dp, vertical = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(stringResource(R.string.auth_signup_title), style = MaterialTheme.typography.headlineMedium)
                 Spacer(Modifier.height(32.dp))
@@ -95,7 +94,7 @@ private fun SignupContent(
                     singleLine = true,
                     isError = state.nameError != null,
                     supportingText = state.nameError?.let { { Text(it) } },
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
                 Spacer(Modifier.height(16.dp))
 
@@ -103,7 +102,7 @@ private fun SignupContent(
                     value = state.email,
                     onValueChange = { onIntent(SignupIntent.EmailChanged(it)) },
                     modifier = Modifier.fillMaxWidth(),
-                    error = state.emailError,
+                    error = state.emailError
                 )
                 Spacer(Modifier.height(16.dp))
 
@@ -111,14 +110,14 @@ private fun SignupContent(
                     value = state.password,
                     onValueChange = { onIntent(SignupIntent.PasswordChanged(it)) },
                     modifier = Modifier.fillMaxWidth(),
-                    error = state.passwordError,
+                    error = state.passwordError
                 )
                 Spacer(Modifier.height(24.dp))
 
                 Button(
                     onClick = { onIntent(SignupIntent.Submit) },
                     modifier = Modifier.fillMaxWidth(),
-                    enabled = !state.isLoading,
+                    enabled = !state.isLoading
                 ) { Text(stringResource(R.string.auth_signup_submit)) }
                 Spacer(Modifier.height(8.dp))
 

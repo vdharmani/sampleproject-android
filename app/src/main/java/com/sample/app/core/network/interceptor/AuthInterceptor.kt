@@ -1,11 +1,11 @@
 package com.sample.app.core.network.interceptor
 
 import com.sample.app.core.datastore.TokenStore
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Attaches `Authorization: Bearer <access>` to every outbound request if a
@@ -16,9 +16,7 @@ import javax.inject.Singleton
  * dispatcher thread (the OkHttp dispatcher pool), never the main thread.
  */
 @Singleton
-class AuthInterceptor @Inject constructor(
-    private val tokenStore: TokenStore,
-) : Interceptor {
+class AuthInterceptor @Inject constructor(private val tokenStore: TokenStore) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
         val request = chain.request()

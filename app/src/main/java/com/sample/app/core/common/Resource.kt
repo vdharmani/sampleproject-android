@@ -12,8 +12,7 @@ sealed class Resource<out T> {
     data object Idle : Resource<Nothing>()
     data object Loading : Resource<Nothing>()
     data class Success<T>(val data: T) : Resource<T>()
-    data class Error(val throwable: Throwable, val message: String? = throwable.message) :
-        Resource<Nothing>()
+    data class Error(val throwable: Throwable, val message: String? = throwable.message) : Resource<Nothing>()
 }
 
 inline fun <T> Resource<T>.onSuccess(block: (T) -> Unit): Resource<T> {

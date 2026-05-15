@@ -23,7 +23,7 @@ fun EmailField(
     modifier: Modifier = Modifier,
     label: String = "Email",
     error: String? = null,
-    imeAction: ImeAction = ImeAction.Next,
+    imeAction: ImeAction = ImeAction.Next
 ) {
     OutlinedTextField(
         value = value,
@@ -35,8 +35,8 @@ fun EmailField(
         supportingText = error?.let { { Text(it) } },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Email,
-            imeAction = imeAction,
-        ),
+            imeAction = imeAction
+        )
     )
 }
 
@@ -48,7 +48,7 @@ fun PasswordField(
     modifier: Modifier = Modifier,
     label: String = "Password",
     error: String? = null,
-    imeAction: ImeAction = ImeAction.Done,
+    imeAction: ImeAction = ImeAction.Done
 ) {
     var revealed by remember { mutableStateOf(false) }
     OutlinedTextField(
@@ -59,16 +59,19 @@ fun PasswordField(
         singleLine = true,
         isError = error != null,
         supportingText = error?.let { { Text(it) } },
-        visualTransformation = if (revealed) VisualTransformation.None
-        else PasswordVisualTransformation(),
+        visualTransformation = if (revealed) {
+            VisualTransformation.None
+        } else {
+            PasswordVisualTransformation()
+        },
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Password,
-            imeAction = imeAction,
+            imeAction = imeAction
         ),
         trailingIcon = {
             TextButton(onClick = { revealed = !revealed }) {
                 Text(if (revealed) "Hide" else "Show")
             }
-        },
+        }
     )
 }

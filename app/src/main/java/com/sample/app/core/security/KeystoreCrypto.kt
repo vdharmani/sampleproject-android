@@ -55,12 +55,12 @@ class KeystoreCrypto @Inject constructor() {
             init(
                 KeyGenParameterSpec.Builder(
                     KEY_ALIAS,
-                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT,
+                    KeyProperties.PURPOSE_ENCRYPT or KeyProperties.PURPOSE_DECRYPT
                 )
                     .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .setKeySize(256)
-                    .build(),
+                    .setKeySize(KEY_SIZE_BITS)
+                    .build()
             )
         }.generateKey()
     }
@@ -69,6 +69,7 @@ class KeystoreCrypto @Inject constructor() {
         const val ANDROID_KEYSTORE = "AndroidKeyStore"
         const val KEY_ALIAS = "starter_token_key"
         const val TRANSFORMATION = "AES/GCM/NoPadding"
+        const val KEY_SIZE_BITS = 256
         const val GCM_TAG_LENGTH_BITS = 128
         const val IV_LENGTH = 12
     }

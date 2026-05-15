@@ -6,8 +6,7 @@ package com.sample.app.core.common
  * core:common so cross-cutting code (interceptors, error renderers) can
  * dispatch on the base type without depending on every feature.
  */
-abstract class AppException(message: String? = null, cause: Throwable? = null) :
-    Exception(message, cause)
+abstract class AppException(message: String? = null, cause: Throwable? = null) : Exception(message, cause)
 
 /** Network is unreachable or the request timed out. */
 class NetworkException(message: String? = null, cause: Throwable? = null) :

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.app.feature.auth.domain.usecase.SignupUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 /**
  * Reference impl for **form-state survival across process death**.
@@ -33,10 +33,8 @@ import javax.inject.Inject
  * this pattern when adding screens with non-trivial form state.
  */
 @HiltViewModel
-class SignupViewModel @Inject constructor(
-    private val savedState: SavedStateHandle,
-    private val signup: SignupUseCase,
-) : ViewModel() {
+class SignupViewModel @Inject constructor(private val savedState: SavedStateHandle, private val signup: SignupUseCase) :
+    ViewModel() {
 
     private val name = savedState.getStateFlow(KEY_NAME, "")
     private val email = savedState.getStateFlow(KEY_EMAIL, "")
@@ -45,18 +43,21 @@ class SignupViewModel @Inject constructor(
     private val transientState = MutableStateFlow(SignupUiState())
 
     val state: StateFlow<SignupUiState> = combine(
-        name, email, password, transientState,
+        name,
+        email,
+        password,
+        transientState
     ) { n, e, p, t ->
         t.copy(name = n, email = e, password = p)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
-        initialValue = SignupUiState(),
+        initialValue = SignupUiState()
     )
 
     private val _effects = Channel<SignupEffect>(
         capacity = Channel.BUFFERED,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val effects = _effects.receiveAsFlow()
 

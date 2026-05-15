@@ -12,7 +12,6 @@ import com.sample.app.feature.auth.data.remote.dto.VerifyOtpRequestDto
 import com.sample.app.feature.auth.data.remote.dto.VerifyOtpResponseDto
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 

@@ -2,13 +2,13 @@ package com.sample.app.core.network.interceptor
 
 import com.sample.app.core.datastore.TokenStore
 import dagger.Lazy
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.Route
-import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Handles 401 responses by attempting a single refresh-then-retry.
@@ -29,7 +29,7 @@ class TokenRefreshAuthenticator @Inject constructor(
     // which needs Retrofit, which needs OkHttpClient — which needs us. The
     // refresher is only realized on the first 401, by which time the whole
     // graph is wired.
-    private val refresher: Lazy<TokenRefresher>,
+    private val refresher: Lazy<TokenRefresher>
 ) : Authenticator {
 
     override fun authenticate(route: Route?, response: Response): Request? {

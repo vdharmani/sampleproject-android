@@ -30,14 +30,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.sample.app.core.ui.components.AppLoader
 import com.sample.app.R
+import com.sample.app.core.ui.components.AppLoader
 
 @Composable
 fun DeleteAccountScreen(
     onBack: () -> Unit,
     onAccountDeleted: () -> Unit,
-    viewModel: DeleteAccountViewModel = hiltViewModel(),
+    viewModel: DeleteAccountViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -53,7 +53,7 @@ fun DeleteAccountScreen(
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             Column(
@@ -61,17 +61,17 @@ fun DeleteAccountScreen(
                     .fillMaxSize()
                     .padding(horizontal = 24.dp, vertical = 32.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Center
             ) {
                 Text(
                     stringResource(R.string.auth_delete_title),
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineMedium
                 )
                 Spacer(Modifier.height(16.dp))
                 Text(
                     stringResource(R.string.auth_delete_body),
                     style = MaterialTheme.typography.bodyMedium,
-                    textAlign = TextAlign.Center,
+                    textAlign = TextAlign.Center
                 )
                 Spacer(Modifier.height(32.dp))
 
@@ -80,9 +80,9 @@ fun DeleteAccountScreen(
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.error,
-                        contentColor = MaterialTheme.colorScheme.onError,
+                        contentColor = MaterialTheme.colorScheme.onError
                     ),
-                    enabled = !state.isLoading,
+                    enabled = !state.isLoading
                 ) { Text(stringResource(R.string.auth_delete_submit)) }
                 Spacer(Modifier.height(8.dp))
 
@@ -98,14 +98,16 @@ fun DeleteAccountScreen(
                 text = { Text(stringResource(R.string.auth_delete_confirm_body)) },
                 confirmButton = {
                     TextButton(
-                        onClick = { viewModel.handle(DeleteAccountIntent.ConfirmDelete) },
-                    ) { Text(stringResource(R.string.auth_delete_confirm_yes), color = MaterialTheme.colorScheme.error) }
+                        onClick = { viewModel.handle(DeleteAccountIntent.ConfirmDelete) }
+                    ) {
+                        Text(stringResource(R.string.auth_delete_confirm_yes), color = MaterialTheme.colorScheme.error)
+                    }
                 },
                 dismissButton = {
                     TextButton(
-                        onClick = { viewModel.handle(DeleteAccountIntent.DismissConfirm) },
+                        onClick = { viewModel.handle(DeleteAccountIntent.DismissConfirm) }
                     ) { Text(stringResource(R.string.auth_cancel)) }
-                },
+                }
             )
         }
     }

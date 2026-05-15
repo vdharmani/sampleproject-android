@@ -30,10 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sample.app.R
 import com.sample.app.core.ui.components.AppLoader
 import com.sample.app.core.ui.components.EmailField
 import com.sample.app.core.ui.components.PasswordField
-import com.sample.app.R
 
 /**
  * Login screen — connects the ViewModel to the dumb [LoginContent] composable.
@@ -45,7 +45,7 @@ fun LoginScreen(
     onAuthed: () -> Unit,
     onGoSignup: () -> Unit,
     onGoForgot: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -69,19 +69,15 @@ fun LoginScreen(
                 LoginIntent.GoToForgotPassword -> onGoForgot()
                 else -> viewModel.handle(intent)
             }
-        },
+        }
     )
 }
 
 @Composable
-private fun LoginContent(
-    state: LoginUiState,
-    snackbarHostState: SnackbarHostState,
-    onIntent: (LoginIntent) -> Unit,
-) {
+private fun LoginContent(state: LoginUiState, snackbarHostState: SnackbarHostState, onIntent: (LoginIntent) -> Unit) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
-        contentWindowInsets = WindowInsets.safeDrawing,
+        contentWindowInsets = WindowInsets.safeDrawing
     ) { padding ->
         Box(modifier = Modifier.padding(padding).fillMaxSize()) {
             LoginForm(state = state, onIntent = onIntent, padding = padding)
@@ -91,28 +87,24 @@ private fun LoginContent(
 }
 
 @Composable
-private fun LoginForm(
-    state: LoginUiState,
-    onIntent: (LoginIntent) -> Unit,
-    padding: PaddingValues,
-) {
+private fun LoginForm(state: LoginUiState, onIntent: (LoginIntent) -> Unit, padding: PaddingValues) {
     Column(
         modifier = Modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 24.dp, vertical = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
             text = stringResource(R.string.auth_login_title),
-            style = androidx.compose.material3.MaterialTheme.typography.headlineMedium,
+            style = androidx.compose.material3.MaterialTheme.typography.headlineMedium
         )
         Spacer(Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.auth_login_subtitle),
             style = androidx.compose.material3.MaterialTheme.typography.bodyMedium,
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Center
         )
         Spacer(Modifier.height(32.dp))
 
@@ -120,7 +112,7 @@ private fun LoginForm(
             value = state.email,
             onValueChange = { onIntent(LoginIntent.EmailChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
-            error = state.emailError,
+            error = state.emailError
         )
         Spacer(Modifier.height(16.dp))
 
@@ -128,13 +120,13 @@ private fun LoginForm(
             value = state.password,
             onValueChange = { onIntent(LoginIntent.PasswordChanged(it)) },
             modifier = Modifier.fillMaxWidth(),
-            error = state.passwordError,
+            error = state.passwordError
         )
         Spacer(Modifier.height(8.dp))
 
         TextButton(
             onClick = { onIntent(LoginIntent.GoToForgotPassword) },
-            modifier = Modifier.align(Alignment.End),
+            modifier = Modifier.align(Alignment.End)
         ) {
             Text(stringResource(R.string.auth_login_forgot))
         }
@@ -143,7 +135,7 @@ private fun LoginForm(
         Button(
             onClick = { onIntent(LoginIntent.Submit) },
             modifier = Modifier.fillMaxWidth(),
-            enabled = !state.isLoading,
+            enabled = !state.isLoading
         ) {
             Text(stringResource(R.string.auth_login_submit))
         }

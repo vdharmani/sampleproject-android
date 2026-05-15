@@ -20,7 +20,7 @@ class SampleApplication : Application() {
         // a real key is in place.
         runCatching {
             SubscriptionManager.initialize(
-                RevenueCatProvider(this, BuildConfig.REVENUECAT_KEY),
+                RevenueCatProvider(this, BuildConfig.REVENUECAT_KEY)
             )
         }.onFailure {
             Log.w("SampleApplication", "Subscription provider init failed — purchases disabled", it)
