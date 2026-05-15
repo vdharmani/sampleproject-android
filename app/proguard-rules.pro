@@ -31,7 +31,7 @@
 }
 
 # --- Retrofit service (explicit keep for interface + generic signatures) ---
--keep,allowobfuscation,allowshrinking interface com.vdharmani.starter.feature.auth.data.remote.AuthApi { *; }
+-keep,allowobfuscation,allowshrinking interface com.sample.app.feature.auth.data.remote.AuthApi { *; }
 -keepattributes Signature, Exceptions, InnerClasses, EnclosingMethod
 
 # --- Gson / Moshi not used; Retrofit uses kotlinx.serialization ---

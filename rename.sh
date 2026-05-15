@@ -6,7 +6,7 @@
 #   ./rename.sh com.myteam.myapp "My App"
 #
 # What it does:
-#   1. Renames the Kotlin package from com.vdharmani.starter → <new-package>
+#   1. Renames the Kotlin package from com.sample.app → <new-package>
 #      across all .kt source files (replaces the package declaration AND
 #      every import that references it).
 #   2. Moves the source directories so they match the new package path.
@@ -33,8 +33,8 @@ if [[ $# -lt 1 ]]; then
     exit 1
 fi
 
-OLD_PACKAGE="com.vdharmani.starter"
-OLD_PATH="com/vdharmani/starter"
+OLD_PACKAGE="com.sample.app"
+OLD_PATH="com/sample/app"
 NEW_PACKAGE="$1"
 NEW_PATH="$(echo "$NEW_PACKAGE" | tr '.' '/')"
 NEW_LABEL="${2:-$(echo "${NEW_PACKAGE##*.}" | tr '[:lower:]' '[:upper:]' | head -c 1)$(echo "${NEW_PACKAGE##*.}" | cut -c 2-)}"
@@ -89,7 +89,7 @@ find . -type d -path "*/java/$OLD_PATH" | while read -r dir; do
 done
 
 # Clean up empty old package directories.
-find . -type d -path "*/java/com/vdharmani" -empty -delete 2>/dev/null || true
+find . -type d -path "*/java/com/sample" -empty -delete 2>/dev/null || true
 find . -type d -path "*/java/com" -empty -delete 2>/dev/null || true
 
 # 3. Update `namespace` in every build.gradle.kts.

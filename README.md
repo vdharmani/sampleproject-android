@@ -49,8 +49,8 @@ Each feature keeps the Clean Architecture layer split (`domain` / `data` /
 ```
 sampleproject-android/
 └── app/                                        ← the only Gradle module
-    └── src/main/java/com/vdharmani/starter/
-        ├── MainActivity.kt, StarterApplication.kt
+    └── src/main/java/com/sample/app/
+        ├── MainActivity.kt, SampleApplication.kt
         ├── navigation/                         ← AppNavGraph + type-safe routes
         ├── core/                               ← shared infrastructure
         │   ├── common/                         ← Resource<T>, AppException sealed types
@@ -111,7 +111,7 @@ rm -rf .git && git init                       # fresh history
 ```
 
 Prefer to do it by hand? In Studio: **Refactor → Rename Package** on
-`com.vdharmani.starter`, then update `applicationId` in `app/build.gradle.kts`,
+`com.sample.app`, then update `applicationId` in `app/build.gradle.kts`,
 `rootProject.name` in `settings.gradle.kts`, and `app_name` in
 `app/src/main/res/values/strings.xml`.
 
@@ -147,7 +147,7 @@ No new Gradle module — a feature is just a package under `feature/`.
 
 ```bash
 # 1. Make the package folders
-mkdir -p app/src/main/java/com/vdharmani/starter/feature/profile/{domain/{model,repository,usecase},data/{remote/dto,mapper,repository,di},presentation}
+mkdir -p app/src/main/java/com/sample/app/feature/profile/{domain/{model,repository,usecase},data/{remote/dto,mapper,repository,di},presentation}
 ```
 
 2. Build the layers the same way `feature/auth/` does — `domain` (pure Kotlin

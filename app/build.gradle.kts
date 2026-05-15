@@ -10,15 +10,15 @@ plugins {
 }
 
 android {
-    namespace = "com.vdharmani.starter"
+    namespace = "com.sample.app"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.vdharmani.starter"
+        applicationId = "com.sample.app"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 10
-        versionName = "1.1.3"
+        versionCode = 11
+        versionName = "1.1.4"
 
         buildConfigField("String", "BASE_URL", "\"https://reqres.in/api/\"")
         // REPLACE with your own RevenueCat Android public API key when wiring
